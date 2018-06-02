@@ -20,22 +20,27 @@ Client = discord.Client()
 client = commands.Bot(command_prefix = "!!")
 
 
-folder = os.path.dirname(__file__)
-creative_folder = os.path.join(os.path.join(folder, 'Creative'), 'Creative')
-survival_folder =os.path.join(os.path.join(folder, 'Survival'), 'Survival')
-stat_folder = os.path.join(survival_folder,'stats')
-data_folder = os.path.join(survival_folder,'data')
-playerdata_folder = os.path.join(survival_folder,'playerdata')
-structure_folder = os.path.join(creative_folder, 'structures')
-overworld_folder = os.path.join(survival_folder, 'region')
-nether_folder = os.path.join(os.path.join(survival_folder, 'DIM-1'), 'region')
-end_folder = os.path.join(os.path.join(survival_folder, 'DIM1'), 'region')
+FOLDER = os.path.dirname(__file__)
+CREATIVE_FOLDER = os.path.join(os.path.join(FOLDER, 'Creative'), 'Creative')
+SURVIVAL_FOLDER =os.path.join(os.path.join(FOLDER, 'Survival'), 'Survival')
+STAT_FOLDER = os.path.join(SURVIVAL_FOLDER,'stats')
+DATA_FOLDER = os.path.join(SURVIVAL_FOLDER,'data')
+PLAYERDATA_FOLDER = os.path.join(SURVIVAL_FOLDER,'playerdata')
+STRUCTURE_FOLDER = os.path.join(CREATIVE_FOLDER, 'structures')
+OVERWORLD_FOLDER = os.path.join(SURVIVAL_FOLDER, 'region')
+NETHER_FOLDER = os.path.join(os.path.join(SURVIVAL_FOLDER, 'DIM-1'), 'region')
+END_FOLDER = os.path.join(os.path.join(SURVIVAL_FOLDER, 'DIM1'), 'region')
 
-if not os.path.exists(structure_folder):
-    os.makedirs(structure_folder)
+if not os.path.exists(STRUCTURE_FOLDER):
+    os.makedirs(STRUCTURE_FOLDER)
 
+#External stored data hidden from code
 ip = open('ip.txt','r')
 ip = ip.read()
+token = open('token.txt','r')
+token = token.read()
+
+#global variables and lists
 uuids = []                      #uuids from stat files
 names = []                      #names converted from uuid
 stat_list = []                  #list of stat objectives
@@ -44,7 +49,6 @@ benchmark_results = []          #contains stats from starting benchmark
 benchmark_stat = ""             #contains the benchmarked stat objective
 benchmark_start_time = ""       #contains benchmark starting time
 
-
 #toggles '-' in given uuid
 def convert_uuid(uuid):
     if '-' in uuid:
@@ -52,6 +56,7 @@ def convert_uuid(uuid):
     else:
         return uuid[:8] + '-' + uuid[8:12] + '-' + uuid[12:16] + '-' + uuid[16:20] + '-' + uuid[20:]
 
+#returns the total size of all files in given location
 def get_size(start_path):
     total_size = 0
     for dirpath, dirnames, filenames in os.walk(start_path):
@@ -60,6 +65,7 @@ def get_size(start_path):
             total_size += os.path.getsize(fp)
     return total_size
 
+#returns all names in the namehistory of a uuid without duplicates or the current name
 def get_name_history(uuid):
     url = "https://api.mojang.com/user/profiles/" + uuid + "/names"
     response = requests.get(url)
@@ -67,13 +73,13 @@ def get_name_history(uuid):
     response = json.loads(response.text)
     current_name = response[-1]['name']
     del response[-1]
-    print(response)
     if response != []:
         for name in response:
             if name['name'] == current_name:
                 del response[response.index(name)]
     return response
 
+#loads all files and performs uuid & username caching
 def load_files():
     #caching stat objectives
     global uuids, names, skins, stat_list
@@ -87,7 +93,7 @@ def load_files():
         stat_list.append(item)
 
     #caching usernames to uuid
-    files = glob.glob(str(os.path.join(stat_folder, '*.json')))
+    files = glob.glob(str(os.path.join(STAT_FOLDER, '*.json')))
     for item in files:
         filename = item[-41:]
         uuids.append(convert_uuid(filename.split('.json', 1)[0]))
@@ -100,7 +106,8 @@ def load_files():
             response = json.loads(base64.b64decode(response['properties'][0]['value']))
             names.append(response['profileName'])
         except:
-            None
+            pass
+
 
 @client.event
 async def on_ready():
@@ -127,12 +134,13 @@ async def on_message(message):
     #!!stat player NAME STAT  |  stats list STAT
     elif message.content.startswith('!!stat'):
             args = message.content.split(" ")
+            #stat player
             if len(args) == 4 and args[1] == 'player':
                 try:
                     name = ''.join(get_close_matches(args[2], names, 1))
                     uuid = convert_uuid(uuids[names.index(name)])
                     try:
-                        with open(os.path.join(stat_folder, uuid + '.json')) as json_data:
+                        with open(os.path.join(STAT_FOLDER, uuid + '.json')) as json_data:
                             stats = json.load(json_data)
                         stat = ''.join(get_close_matches('stat.' + args[3], stat_list, 1))
                         try:
@@ -156,6 +164,7 @@ async def on_message(message):
                         await client.send_message(message.channel, 'No playerfile or stat found')
                 except:
                     await client.send_message(message.channel, 'Invalid username')
+            #stat list
             elif len(args) == 3 and args[1] == 'list':
                 try:
                     stat = ''.join(get_close_matches('stat.' + args[2], stat_list, 1))
@@ -163,14 +172,14 @@ async def on_message(message):
                     text2 = []
                     total = 0
                     for item in uuids:
-                        with open(os.path.join(stat_folder, convert_uuid(item) + '.json')) as json_data:
+                        with open(os.path.join(STAT_FOLDER, convert_uuid(item) + '.json')) as json_data:
                             stats = json.load(json_data)
                             try:
                                 text1.append(stats[stat])
                                 text2.append(names[uuids.index(item)])
                                 total += stats[stat]
                             except:
-                                None
+                                pass
                     text1, text2 = zip(*sorted(zip(text1, text2)))
                     if not text1 == []:
                         em = discord.Embed(
@@ -195,7 +204,7 @@ async def on_message(message):
 
     #!!scoreboard NAME
     elif message.content.startswith('!!scoreboard'):
-            nbtfile = nbt.NBTFile(os.path.join(data_folder, 'scoreboard.dat'), 'rb')
+            nbtfile = nbt.NBTFile(os.path.join(DATA_FOLDER, 'scoreboard.dat'), 'rb')
             args = message.content.split(" ")
             scoreboard_objectives = []
             for tag in nbtfile['data']['Objectives']:
@@ -274,7 +283,7 @@ async def on_message(message):
             req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
             response = urllib.request.urlopen(req)
             response = response.read()
-            f = open(os.path.join(structure_folder, filename), 'wb')
+            f = open(os.path.join(STRUCTURE_FOLDER, filename), 'wb')
             f.write(response)
             f.close
             em = discord.Embed(
@@ -289,11 +298,11 @@ async def on_message(message):
 
     #!!tps
     elif message.content.startswith('!!tps'):
-        level_file = nbt.NBTFile(os.path.join(survival_folder, 'level.dat'), 'rb')
+        level_file = nbt.NBTFile(os.path.join(SURVIVAL_FOLDER, 'level.dat'), 'rb')
         time_start = int(level_file['Data']['LastPlayed'].value)
-        level_file = nbt.NBTFile(os.path.join(survival_folder, 'level.dat'), 'rb')
+        level_file = nbt.NBTFile(os.path.join(SURVIVAL_FOLDER, 'level.dat'), 'rb')
         time_current = int(level_file['Data']['LastPlayed'].value)
-        level_file = nbt.NBTFile(os.path.join(survival_folder, 'level.dat_old'), 'rb')
+        level_file = nbt.NBTFile(os.path.join(SURVIVAL_FOLDER, 'level.dat_old'), 'rb')
         time_old = int(level_file['Data']['LastPlayed'].value)
         tps = time_current - time_old
         tps = 45 / (tps / 1000) * 20
@@ -310,7 +319,7 @@ async def on_message(message):
             benchmark_results = []
             benchmark_stat = ''.join(get_close_matches('stat.' + args[2], stat_list, 1))
             for item in uuids:
-                with open(os.path.join(stat_folder, convert_uuid(item) + '.json')) as json_data:
+                with open(os.path.join(STAT_FOLDER, convert_uuid(item) + '.json')) as json_data:
                     stats = json.load(json_data)
                     try:
                         benchmark_results.append(stats[benchmark_stat])
@@ -325,7 +334,7 @@ async def on_message(message):
         elif len(args) == 2 and args[1] == 'stop' and benchmark_stat != '':
             benchmark_results_final = []
             for item in uuids:
-                with open(os.path.join(stat_folder, convert_uuid(item) + '.json')) as json_data:
+                with open(os.path.join(STAT_FOLDER, convert_uuid(item) + '.json')) as json_data:
                     stats = json.load(json_data)
                     try:
                         benchmark_results_final.append(stats[benchmark_stat])
@@ -363,31 +372,31 @@ async def on_message(message):
 
     #!!list
     elif message.content.startswith('!!list'):
-        #try:
-        server = MinecraftServer(ip, 25565)
-        query = server.query()
-        online_list = query.players.names
-        if online_list != []:
-            text1 = []
-            for item in online_list:
-                nbtfile = nbt.NBTFile(os.path.join(playerdata_folder, convert_uuid(uuids[names.index(item)]) + '.dat'), 'rb')
-                if int(nbtfile['Dimension'].value) == -1: text1.append('**' + item + '**(N)')
-                elif int(nbtfile['Dimension'].value) == 0: text1.append('**' + item + '**(O)')
-                elif int(nbtfile['Dimension'].value) == 1: text1.append('**' + item + '**(E)')
-            await client.send_message(message.channel, 'Players: ' + ", ".join(text1))
-        else:
-            await client.send_message(message.channel, 'No Player is currently online')
-        #except:
-            #await client.send_message(message.channel, 'An error occurred while loading playerlist')
+        try:
+            server = MinecraftServer(ip, 25565)
+            query = server.query()
+            online_list = query.players.names
+            if online_list != []:
+                text1 = []
+                for item in online_list:
+                    nbtfile = nbt.NBTFile(os.path.join(PLAYERDATA_FOLDER, convert_uuid(uuids[names.index(item)]) + '.dat'), 'rb')
+                    if int(nbtfile['Dimension'].value) == -1: text1.append('**' + item + '**(N)')
+                    elif int(nbtfile['Dimension'].value) == 0: text1.append('**' + item + '**(O)')
+                    elif int(nbtfile['Dimension'].value) == 1: text1.append('**' + item + '**(E)')
+                await client.send_message(message.channel, 'Players: ' + ", ".join(text1))
+            else:
+                await client.send_message(message.channel, 'No Player is currently online')
+        except:
+            await client.send_message(message.channel, 'An error occurred while loading playerlist')
 
 
     #!!worldsize
     elif message.content.startswith('!!worldsize'):
         try:
-            total_size = get_size(survival_folder)
-            ow_size = get_size(overworld_folder)
-            nether_size = get_size(nether_folder)
-            end_size = get_size(end_folder)
+            total_size = get_size(SURVIVAL_FOLDER)
+            ow_size = get_size(OVERWORLD_FOLDER)
+            nether_size = get_size(NETHER_FOLDER)
+            end_size = get_size(END_FOLDER)
             em = discord.Embed(
                 description = '',
                 colour = 0x003763)
@@ -408,22 +417,29 @@ async def on_message(message):
 
     #!!synchronize
     elif message.content.startswith('!!synchronize'):
-            nbtfile = nbt.NBTFile(os.path.join(data_folder, 'scoreboard.dat'), 'rb')
-            #del nbtfile['data']['PlayerScores'][0]
+            #removes entries that store namehistory usernames
+            nbtfile = nbt.NBTFile(os.path.join(DATA_FOLDER, 'scoreboard.dat'), 'rb')
             for uuid in uuids:
                 history = get_name_history(uuid)
-                for tag in nbtfile['data']['PlayerScores']:
-                    print(names[uuids.index(uuid)] + ' --- ' + str(tag) + ' --- ' + str(history))
+                for i, tag in zip(range(len(nbtfile['data']['PlayerScores'])-1, -1, -1), reversed(nbtfile['data']['PlayerScores'])):
                     if any(d['name'] == str(tag['Name']) for d in history):
-                        i = nbtfile['data']['PlayerScores'].index(tag)
-                        print('IN   ' + str(i))
-                        print(nbtfile['data']['PlayerScores'][i])
                         del nbtfile['data']['PlayerScores'][i]
+            nbtfile.write_file(os.path.join(DATA_FOLDER, 'scoreboard.dat'))
 
-            nbtfile.write_file(os.path.join(data_folder, 'scoreboard.dat'))
+            #updates all playerscores to stat value if objective does not contain a number
+            nbtfile = nbt.NBTFile(os.path.join(DATA_FOLDER, 'scoreboard.dat'), 'rb')
+            for i, tag in zip(range(len(nbtfile['data']['PlayerScores'])-1, -1, -1), reversed(nbtfile['data']['PlayerScores'])):
+                for objective in nbtfile['data']['Objectives']:
+                    if tag['Objective'].value == objective['DisplayName'].value and not any(char.isdigit() for char in objective['DisplayName'].value):
+                        try:
+                            uuid = uuids[names.index(tag['Name'].value)]
+                            with open(os.path.join(STAT_FOLDER, convert_uuid(uuid) + '.json')) as json_data:
+                                stats = json.load(json_data)
+                            nbtfile['data']['PlayerScores'][i]['Score'].value = stats[objective['CriteriaName'].value]
+                            print(str(stats[objective['CriteriaName'].value]) + "        " + str(tag) + "       " + str(objective))
+                        except:
+                            pass
+            nbtfile.write_file(os.path.join(DATA_FOLDER, 'scoreboard.dat'))
             await client.send_message(message.channel, 'Scoreboard and Statistics are now synchronized')
 
-
-token = open('token.txt','r')
-token = token.read()
 client.run(token)
