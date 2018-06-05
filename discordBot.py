@@ -1,6 +1,8 @@
+from commands import listcmd
 from discord.ext.commands import Bot
 from discord.ext import commands
 from difflib import get_close_matches
+from json_minify import json_minify
 from mcstatus import MinecraftServer
 from nbt import *
 import requests
@@ -41,13 +43,14 @@ token = open('token.txt','r')
 token = token.read()
 
 #global variables and lists
-uuids = []                      #uuids from stat files
-names = []                      #names converted from uuid
-stat_list = []                  #list of stat objectives
-skins = []                      #links to skin on mojang servers
-benchmark_results = []          #contains stats from starting benchmark
-benchmark_stat = ""             #contains the benchmarked stat objective
-benchmark_start_time = ""       #contains benchmark starting time
+uuids = []                                  #uuids from stat files
+known_locations = { -1: [], 0: [], 1: [] }  #dictionary of known server locations per dimension
+names = []                                  #names converted from uuid
+stat_list = []                              #list of stat objectives
+skins = []                                  #links to skin on mojang servers
+benchmark_results = []                      #contains stats from starting benchmark
+benchmark_stat = ""                         #contains the benchmarked stat objective
+benchmark_start_time = ""                   #contains benchmark starting time
 
 #toggles '-' in given uuid
 def convert_uuid(uuid):
@@ -107,6 +110,18 @@ def load_files():
             names.append(response['profileName'])
         except:
             pass
+
+    #load list of known locations on the server
+    file = os.path.join(FOLDER,'known_locations.json')
+
+    with open(file, 'r') as f:
+        json_data = json.loads(json_minify(f.read(None)))
+
+        for entry in json_data:
+            known_location = listcmd.KnownLocation.parse(entry)
+
+            if known_location != None:
+                known_locations[known_location.dimension].append(known_location)
 
 
 @client.event
@@ -375,14 +390,20 @@ async def on_message(message):
         try:
             server = MinecraftServer(ip, 25565)
             query = server.query()
-            online_list = query.players.names
-            if online_list != []:
+            
+            if query.players.online > 0:
+                online_list = query.players.names
                 text1 = []
+                dimensions = { -1: 'N', 0: 'O', 1: 'E' }
+
                 for item in online_list:
-                    nbtfile = nbt.NBTFile(os.path.join(PLAYERDATA_FOLDER, convert_uuid(uuids[names.index(item)]) + '.dat'), 'rb')
-                    if int(nbtfile['Dimension'].value) == -1: text1.append('**' + item + '**(N)')
-                    elif int(nbtfile['Dimension'].value) == 0: text1.append('**' + item + '**(O)')
-                    elif int(nbtfile['Dimension'].value) == 1: text1.append('**' + item + '**(E)')
+                    nbtfile = nbt.NBTFile(os.path.join(PLAYERDATA_FOLDER, convert_uuid(uuids[names.index(item)]) + '.dat'))
+
+                    dimension = nbtfile['Dimension'].value
+                    x, y, z = (int(i.value) for i in nbtfile['Pos'])
+                    known_location = listcmd.first(known_locations[dimension], lambda i: i.is_contained(x, z))
+
+                    text1.append('**' + item + '** (' + dimensions.get(dimension, '?') + ('' if known_location == None else '@*' + known_location.location_name) + '*)')
                 await client.send_message(message.channel, 'Players: ' + ", ".join(text1))
             else:
                 await client.send_message(message.channel, 'No Player is currently online')

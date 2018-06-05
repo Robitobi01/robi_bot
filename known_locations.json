@@ -1,0 +1,32 @@
+//
+// "Dimension"
+//		[ "Location Name", SE X Coord, SE Z Coord, NW X Coord, NW Z Coord ]
+[
+  // Nether
+  [ -1, "Gold Farm", -80, 641, -124, 597 ],
+  [ -1, "Mushroom Farm", -58, -81, -71, -109 ],
+  [ -1, "New Bolt??", 0, 0, 0, 0 ],
+  [ -1, "Wither Skeleton", 0, 0, 0, 0 ],
+  // Overworld
+  [ 0, "Creeper Farm", 217, -167, 183, -201 ],
+  [ 0, "Dark Oak", 240, -641, 186, -695 ],
+  [ 0, "Double Witch 1", 81, -1112, 71, -1122 ],
+  [ 0, "Double Witch 2", 0, 0, 0, 0 ],
+  [ 0, "Flower Farm", 0, 0, 0, 0 ],
+  [ 0, "Guardian Drop", 1273, 873, 1206, 806 ],
+  [ 0, "Guardian XP", 1273, 1129, 1206, 1062 ],
+  [ 0, "Ice Farm", 1844, -467, 1785, -738 ],
+  [ 0, "Iron Farm", -1471, -428, -1571, -544 ],
+  [ 0, "Mob Farm", -35, 142, -111, 66 ],
+  [ 0, "Mooshroom", -9470, 228, -9494, 204 ],
+  [ 0, "Netherwart Farm", -735, -518, -890, -673 ],
+  [ 0, "Quad Witch", -562, -560, -602, -600 ],
+  [ 0, "Spider Farm", -70, -439, -106, -475 ],
+  [ 0, "Super Secret Area", 0, 0, 0, 0 ],
+  [ 0, "UTF", 325, -704, 242, -848 ],
+  [ 0, "Villager Trading", 505, 1030, 461, 905 ],
+  [ 0, "Vine Farm", -630, -362, -741, -442 ],
+  [ 0, "Wool Farm", -2073, -1096, -2190, -1205 ],
+  // End
+  [ 1, "Sugar Cane Farm", 0, 0, 0, 0 ]
+]
