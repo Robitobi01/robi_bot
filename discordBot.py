@@ -403,7 +403,7 @@ async def on_message(message):
                     x, y, z = (int(i.value) for i in nbtfile['Pos'])
                     known_location = listcmd.first(known_locations[dimension], lambda i: i.is_contained(x, z))
 
-                    text1.append('**' + item + '** (' + dimensions.get(dimension, '?') + ('' if known_location == None else '@*' + known_location.location_name) + '*)')
+                    text1.append('**' + item + '** (' + dimensions.get(dimension, '?') + ('' if known_location == None else '@*' + known_location.location_name + '*') + ')')
                 await client.send_message(message.channel, 'Players: ' + ", ".join(text1))
             else:
                 await client.send_message(message.channel, 'No Player is currently online')
