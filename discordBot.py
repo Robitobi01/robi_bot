@@ -219,7 +219,7 @@ async def on_message(message):
 
     #!!scoreboard NAME
     elif message.content.startswith('!!scoreboard'):
-            nbtfile = nbt.NBTFile(os.path.join(DATA_FOLDER, 'scoreboard.dat'), 'rb')
+            nbtfile = nbt.NBTFile(os.path.join(DATA_FOLDER, 'scoreboard.dat'))
             args = message.content.split(" ")
             scoreboard_objectives = []
             for tag in nbtfile['data']['Objectives']:
@@ -313,11 +313,11 @@ async def on_message(message):
 
     #!!tps
     elif message.content.startswith('!!tps'):
-        level_file = nbt.NBTFile(os.path.join(SURVIVAL_FOLDER, 'level.dat'), 'rb')
+        level_file = nbt.NBTFile(os.path.join(SURVIVAL_FOLDER, 'level.dat'))
         time_start = int(level_file['Data']['LastPlayed'].value)
-        level_file = nbt.NBTFile(os.path.join(SURVIVAL_FOLDER, 'level.dat'), 'rb')
+        level_file = nbt.NBTFile(os.path.join(SURVIVAL_FOLDER, 'level.dat'))
         time_current = int(level_file['Data']['LastPlayed'].value)
-        level_file = nbt.NBTFile(os.path.join(SURVIVAL_FOLDER, 'level.dat_old'), 'rb')
+        level_file = nbt.NBTFile(os.path.join(SURVIVAL_FOLDER, 'level.dat_old'))
         time_old = int(level_file['Data']['LastPlayed'].value)
         tps = time_current - time_old
         tps = 45 / (tps / 1000) * 20
@@ -439,7 +439,7 @@ async def on_message(message):
     #!!synchronize
     elif message.content.startswith('!!synchronize'):
             #removes entries that store namehistory usernames
-            nbtfile = nbt.NBTFile(os.path.join(DATA_FOLDER, 'scoreboard.dat'), 'rb')
+            nbtfile = nbt.NBTFile(os.path.join(DATA_FOLDER, 'scoreboard.dat'))
             for uuid in uuids:
                 history = get_name_history(uuid)
                 for i, tag in zip(range(len(nbtfile['data']['PlayerScores'])-1, -1, -1), reversed(nbtfile['data']['PlayerScores'])):
@@ -448,7 +448,7 @@ async def on_message(message):
             nbtfile.write_file(os.path.join(DATA_FOLDER, 'scoreboard.dat'))
 
             #updates all playerscores to stat value if objective does not contain a number
-            nbtfile = nbt.NBTFile(os.path.join(DATA_FOLDER, 'scoreboard.dat'), 'rb')
+            nbtfile = nbt.NBTFile(os.path.join(DATA_FOLDER, 'scoreboard.dat'))
             for i, tag in zip(range(len(nbtfile['data']['PlayerScores'])-1, -1, -1), reversed(nbtfile['data']['PlayerScores'])):
                 for objective in nbtfile['data']['Objectives']:
                     if tag['Objective'].value == objective['DisplayName'].value and not any(char.isdigit() for char in objective['DisplayName'].value):
