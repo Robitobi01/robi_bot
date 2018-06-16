@@ -1,1 +1,1 @@
-__all__ = ["baseCommand", "commandCache", "helpCommand", "listCommand", "reloadCommand", "tpsCommand"]
+__all__ = ["baseCommand", "commandCache", "hardwareCommand", "helpCommand", "listCommand", "reloadCommand", "statCommand", "tpsCommand"]

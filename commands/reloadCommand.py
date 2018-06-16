@@ -9,7 +9,7 @@ class ReloadCommand(BaseCommand):
     command_text = "!!reload"
 
     def __init__(self, discord, client, message, command_cache, commands, stat_folder):
-        super(ReloadCommand, self).__init__(discord, client, message, command_cache)
+        super().__init__(discord, client, message, command_cache)
 
         self.commands = commands
         self.stat_folder = stat_folder

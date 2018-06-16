@@ -10,7 +10,7 @@ class TpsCommand(BaseCommand):
     command_text = "!!tps"
 
     def __init__(self, discord, client, message, command_cache, survival_folder):
-        super(TpsCommand, self).__init__(discord, client, message, command_cache)
+        super().__init__(discord, client, message, command_cache)
 
         self.survival_folder = survival_folder
 

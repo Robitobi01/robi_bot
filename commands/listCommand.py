@@ -1,10 +1,11 @@
 from .baseCommand import BaseCommand
 from .commandCache import CommandCache
 
+from utils import *
+
 from json_minify import json_minify
 from mcstatus import MinecraftServer
 from nbt import nbt
-from utils import *
 
 import json
 import os
@@ -48,7 +49,7 @@ class ListCommand(BaseCommand):
     known_locations = { -1: [], 0: [], 1: [] }
 
     def __init__(self, discord, client, message, command_cache, minecraft_ip, minecraft_port, current_folder, playerdata_folder):
-        super(ListCommand, self).__init__(discord, client, message, command_cache)
+        super().__init__(discord, client, message, command_cache)
 
         self.minecraft_ip = minecraft_ip
         self.minecraft_port = minecraft_port
