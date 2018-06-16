@@ -11,7 +11,7 @@ class HelpCommand(BaseCommand):
     command_text = "!!help"
 
     def __init__(self, discord, client, message, command_cache, commands):
-        super(HelpCommand, self).__init__(discord, client, message, command_cache)
+        super().__init__(discord, client, message, command_cache)
 
         self.commands = commands
 
