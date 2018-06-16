@@ -9,24 +9,25 @@ import os
 
 # Class to get away from using global variables in commands which is a PITA with python modules
 class CommandCache(object):
-    semaphore = asyncio.Semaphore(1)
+    semaphore = asyncio.Semaphore()
 
     def __init__(self, stat_folder, is_online):
         self.stat_folder = stat_folder
         self.is_online = is_online
 
     async def load_files(self):
-        await asyncio.sleep(5)
+        if not self.is_online:
+            await asyncio.sleep(5)
 
-        temp_stat_names = []
+        temp_stat_ids = []
         temp_uuids = []
         temp_names = []
 
         # load stat names
-        with open('statslist.txt', 'r') as stream:
+        with open('stat_ids.txt', 'r') as stream:
             buffer = stream.read().translate({ ord(c): None for c in '"' })
         
-        temp_stat_names = buffer.split(',')
+        temp_stat_ids = buffer.split(',')
 
         # caching usernames to uuid
         files = glob.glob(os.path.join(self.stat_folder, '*.json'))
@@ -71,4 +72,4 @@ class CommandCache(object):
         async with CommandCache.semaphore:
             self.names = temp_names
             self.uuids = temp_uuids
-            self.stat_names = temp_stat_names
+            self.stat_ids = temp_stat_ids
