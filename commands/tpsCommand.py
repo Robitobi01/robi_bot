@@ -2,7 +2,6 @@ from .baseCommand import BaseCommand
 
 from nbt import nbt
 
-import asyncio
 import discord
 import os
 
