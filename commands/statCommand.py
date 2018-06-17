@@ -6,7 +6,6 @@ from utils import *
 from difflib import get_close_matches
 from nbt import nbt
 
-import asyncio
 import discord
 import os
 
