@@ -1,7 +1,8 @@
-import requests
-import json
 import base64
 import discord
+import json
+import os
+import requests
 
 #toggles '-' in given uuid
 def convert_uuid(uuid):
@@ -54,7 +55,7 @@ def get_name_from_uuid(uuid):
 def generate_embed_table(discord, columns_lines):
     em = discord.Embed(
         description = '',
-        colour=0x003763)
+        colour = 0x003763)
 
     for column in columns_lines:
         em.add_field(
