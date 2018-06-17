@@ -30,50 +30,66 @@ class StatCommand(BaseCommand):
                     player_name = ''.join(get_close_matches(args[2], self.cache.names, 1))
                     uuid = convert_uuid(self.cache.uuids[self.cache.names.index(player_name)])
 
-                    try:
-                        with open(os.path.join(self.stat_folder, uuid + '.json')) as json_data:
-                            stats = json.load(json_data)
+                    stat_id = ''.join(get_close_matches('stat.' + args[3], self.cache.stat_ids, 1))
 
-                        stat_id = ''.join(get_close_matches('stat.' + args[3], self.cache.stat_ids, 1))
-                        stat_value = str(stats[stat_id]) if stat_id in stats else str(0)
-
+                    if stat_id == '':
                         if self.client == None:
-                            print('Stat = ' + stat_id + ', Value = ' + stat_value + ', ' + player_name + ' - Statistics')
+                            print('Invalid stat')
                         else:
-                            em = discord.Embed(
-                                description = '',
-                                colour = 0x003763)
-
-                            em.add_field(
-                                name = 'Stat',
-                                inline = True,
-                                value = stat_id)
-                            em.add_field(
-                                name = 'Result',
-                                inline = True,
-                                value = stat_value)
-
-                            em.set_author(
-                                name = player_name + ' - Statistics', 
-                                icon_url = 'https://crafatar.com/avatars/' + uuid)
-                        
-                            await self.client.send_message(self.message.channel, embed = em)
-                    except:
-                        if self.client == None:
-                            print('No playerfile or stat found')
-                        else:
-                            await self.client.send_message(self.message.channel, 'No playerfile or stat found')
+                            await self.client.send_message(self.message.channel, 'Invalid stat')
                 except:
                     if self.client == None:
-                        print('Invalid username')
+                        print('Invalid username or stat')
                     else:
-                        await self.client.send_message(self.message.channel, 'Invalid username')
+                        await self.client.send_message(self.message.channel, 'Invalid username or stat')
+
+                    return
+
+            try:
+                with open(os.path.join(self.stat_folder, uuid + '.json')) as json_data:
+                    stats = json.load(json_data)
+
+                stat_value = str(stats[stat_id]) if stat_id in stats else str(0)
+            except:
+                if self.client == None:
+                    print('No playerfile or stat found')
+                else:
+                    await self.client.send_message(self.message.channel, 'No playerfile or stat found')
+
+            if self.client == None:
+                print('Stat = ' + stat_id + ', Value = ' + stat_value + ', ' + player_name + ' - Statistics')
+            else:
+                em = discord.Embed(
+                    description = '',
+                    colour = 0x003763)
+
+                em.add_field(
+                    name = 'Stat',
+                    inline = True,
+                    value = stat_id)
+                em.add_field(
+                    name = 'Result',
+                    inline = True,
+                    value = stat_value)
+
+                em.set_author(
+                    name = player_name + ' - Statistics', 
+                    icon_url = 'https://crafatar.com/avatars/' + uuid)
+                        
+                await self.client.send_message(self.message.channel, embed = em)
 
         # stat list
         elif len(args) == 3 and args[1] == 'list':
             async with CommandCache.semaphore:
                 try:
                     stat_id = ''.join(get_close_matches('stat.' + args[2], self.cache.stat_ids, 1))
+
+                    if stat_id == '':
+                        if self.client == None:
+                            print('Invalid stat')
+                        else:
+                            await self.client.send_message(self.message.channel, 'Invalid stat')
+
                     text1 = []
                     text2 = []
                     total = 0
@@ -86,47 +102,49 @@ class StatCommand(BaseCommand):
                                 text1.append(stats[stat_id])
                                 text2.append(self.cache.names[self.cache.uuids.index(item)])
                                 total += stats[stat_id]
-
-                    if text1 == []:
-                        if self.client == None:
-                            print('No playerfile or stat found')
-                        else:
-                            await self.client.send_message(self.message.channel, 'No playerfile or stat found')
-                    else:
-                        if self.client == None:
-                            print(stat_id + ' Ranking')
-
-                            for item in reversed(sorted(zip(text1, text2))):
-                                print(str(item[0]) + ", " + item[1])
-
-                            print('Total: ' + str(total) + '    |    ' + str(round((total / 1000000), 2)) + ' M')
-                        else:
-                            text1, text2 = zip(*sorted(zip(text1, text2)))
-
-                            em = discord.Embed(
-                                description = '',
-                                colour = 0x003763)
-
-                            em.add_field(
-                                name = 'Players',
-                                inline = True,
-                                value = '\n'.join(text2[::-1]))
-                            em.add_field(
-                                name = 'Result',
-                                inline = True,
-                                value = '\n'.join(str(x) for x in text1[::-1]))
-                            
-                            em.set_author(
-                                name = stat_id + ' - Ranking', 
-                                icon_url = 'https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
-                            em.set_footer(text = 'Total: ' + str(total) + '    |    ' + str(round((total / 1000000), 2)) + ' M')
-
-                            await self.client.send_message(self.message.channel, embed = em)
                 except:
                     if self.client == None:
                         print('No playerfile or stat found')
                     else:
                         await self.client.send_message(self.message.channel, 'No playerfile or stat found')
+
+                    return
+
+            if text1 == []:
+                if self.client == None:
+                    print('No playerfile or stat found')
+                else:
+                    await self.client.send_message(self.message.channel, 'No playerfile or stat found')
+            else:
+                if self.client == None:
+                    print(stat_id + ' Ranking')
+
+                    for item in reversed(sorted(zip(text1, text2))):
+                        print(str(item[0]) + ", " + item[1])
+
+                    print('Total: ' + str(total) + '    |    ' + str(round((total / 1000000), 2)) + ' M')
+                else:
+                    text1, text2 = zip(*sorted(zip(text1, text2)))
+
+                    em = discord.Embed(
+                        description = '',
+                        colour = 0x003763)
+
+                    em.add_field(
+                        name = 'Players',
+                        inline = True,
+                        value = '\n'.join(text2[::-1]))
+                    em.add_field(
+                        name = 'Result',
+                        inline = True,
+                        value = '\n'.join(str(x) for x in text1[::-1]))
+                            
+                    em.set_author(
+                        name = stat_id + ' - Ranking', 
+                        icon_url = 'https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
+                    em.set_footer(text = 'Total: ' + str(total) + '    |    ' + str(round((total / 1000000), 2)) + ' M')
+
+                    await self.client.send_message(self.message.channel, embed = em)
         else:
             if self.client == None:
                 print('Invalid syntax')
