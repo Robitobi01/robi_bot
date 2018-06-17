@@ -81,11 +81,11 @@ class ListCommand(BaseCommand):
             
             async with CommandCache.semaphore:
                 for item in online_list:
-                    nbtfile = nbt.NBTFile(os.path.join(self.playerdata_folder, convert_uuid(self.cache.uuids[self.cache.names.index(item)]) + '.dat'))
-                    #nbtfile = nbt.NBTFile(os.path.join(self.playerdata_folder, '33804744-b7a3-4816-8ddc-02ac2d8c80cf.dat'))
+                    nbt_file = nbt.NBTFile(os.path.join(self.playerdata_folder, convert_uuid(self.cache.uuids[self.cache.names.index(item)]) + '.dat'))
+                    #nbt_file = nbt.NBTFile(os.path.join(self.playerdata_folder, '33804744-b7a3-4816-8ddc-02ac2d8c80cf.dat'))
 
-                    dimension = nbtfile['Dimension'].value
-                    x, y, z = (int(i.value) for i in nbtfile['Pos'])
+                    dimension = nbt_file['Dimension'].value
+                    x, y, z = (int(i.value) for i in nbt_file['Pos'])
                     known_location = first(ListCommand.known_locations[dimension], lambda i: i.is_contained(x, z))
         
                     text1.append('**' + item + '** (' + ListCommand.dimensions.get(dimension, '?') + ('' if known_location == None else '@*' + known_location.location_name + '*') + ')')
