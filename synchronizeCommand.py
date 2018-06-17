@@ -32,7 +32,6 @@ class SynchronizeCommand(BaseCommand):
                 for i, tag in zip(range(len(nbtfile['data']['PlayerScores'])-1, -1, -1), reversed(nbtfile['data']['PlayerScores'])):
                     if any(d['name'] == str(tag['Name']) for d in history):
                         if any(char.isdigit() for char in tag['Objective'].value):
-                            print(tag)
                             temp_tag = copy.deepcopy(tag)
                             temp_tag['Name'].value = self.cache.names[self.cache.uuids.index(uuid)]
                             for j, tag2 in zip(range(len(nbtfile['data']['PlayerScores'])-1, -1, -1), reversed(nbtfile['data']['PlayerScores'])):
