@@ -22,10 +22,10 @@ class WorldsizeCommand(BaseCommand):
     async def process(self, args):
         try:
             # Get sizes in GB
-            total_size = round(get_size(self.survival_folder) / 1000000000, 2)
-            overworld_size = round(get_size(self.overworld_folder) / 1000000000, 2)
-            nether_size = round(get_size(self.nether_folder) / 1000000000, 2)
-            end_size = round(get_size(self.end_folder) / 1000000000, 2)
+            total_size = round(get_size(self.survival_folder) / 1073741824, 2)
+            overworld_size = round(get_size(self.overworld_folder) / 1073741824, 2)
+            nether_size = round(get_size(self.nether_folder) / 1073741824, 2)
+            end_size = round(get_size(self.end_folder) / 1073741824, 2)
             
             if self.client == None:
                 print('Overworld = ' + str(overworld_size) + ' GB')
