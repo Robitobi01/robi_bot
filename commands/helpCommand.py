@@ -22,8 +22,10 @@ class HelpCommand(BaseCommand):
             if k != self.command_text:
                 help_text.append(self.commands[k].help()) 
 
+        help_text = ''.join(help_text)
+
         if self.client == None:
-            print(''.join(help_text))
+            print(help_text)
         else:
             em = discord.Embed(
                 description = 'This bot provides general information about the Dugged server. \nThe command prefix is **!!**.\n ',
