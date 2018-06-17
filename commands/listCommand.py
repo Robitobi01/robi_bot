@@ -90,10 +90,10 @@ class ListCommand(BaseCommand):
         
                     text1.append('**' + item + '** (' + ListCommand.dimensions.get(dimension, '?') + ('' if known_location == None else '@*' + known_location.location_name + '*') + ')')
                 
-                if self.client == None:
-                    print('Players: ' + ', '.join(text1))
-                else:
-                    await self.client.send_message(self.message.channel, 'Players: ' + ", ".join(text1))
+            if self.client == None:
+                print('Players: ' + ', '.join(text1))
+            else:
+                await self.client.send_message(self.message.channel, 'Players: ' + ", ".join(text1))
         else:
             if self.client == None:
                 print('No Player is currently online')            
