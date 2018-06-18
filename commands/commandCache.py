@@ -19,10 +19,10 @@ class CommandCache(object):
         if not self.is_online:
             await asyncio.sleep(5)
 
-        temp_stat_ids = []
-        temp_uuids = []
-        temp_names = []
         temp_admin_list = []
+        temp_names = []
+        temp_uuids = []
+        temp_stat_ids = []
 
         # load stat names
         with open('stat_ids.txt', 'r') as stream:
@@ -77,7 +77,7 @@ class CommandCache(object):
 
         # Only modify the cache values after getting the semaphore
         async with CommandCache.semaphore:
+            self.admin_list = temp_admin_list
             self.names = temp_names
             self.uuids = temp_uuids
             self.stat_ids = temp_stat_ids
-            self.admin_list = temp_admin_list
