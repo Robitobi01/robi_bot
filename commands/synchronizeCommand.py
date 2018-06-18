@@ -22,8 +22,7 @@ class SynchronizeCommand(BaseCommand):
         return '`' + self.command_text + '`  **-**  Synchronizes stats and scoreboards and enables namechanges\n'
 
     async def process(self, args):
-        #for security reasons only works for robi
-        if self.message.author.id == '178114889028599808':
+        if self.message.author.id in self.cache.admin_list:
 
             #removes entries that store namehistory usernames
             nbtfile = nbt.NBTFile(os.path.join(self.data_folder, 'scoreboard.dat'))
@@ -54,7 +53,6 @@ class SynchronizeCommand(BaseCommand):
                         except:
                             pass
             nbtfile.write_file(os.path.join(self.data_folder, 'scoreboard.dat'))
-            else:
-                await self.client.send_message(message.channel, 'Scoreboard and Statistics are now synchronized')
+            await self.client.send_message(message.channel, 'Scoreboard and Statistics are now synchronized')
         else:
-             await self.client.send_message(message.channel, 'You dont have permissions to do that')
+             await self.client.send_message(message.channel, 'You dont have permissions to do that!')

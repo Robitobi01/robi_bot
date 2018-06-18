@@ -22,12 +22,19 @@ class CommandCache(object):
         temp_stat_ids = []
         temp_uuids = []
         temp_names = []
+        temp_admin_list = []
 
         # load stat names
         with open('stat_ids.txt', 'r') as stream:
             buffer = stream.read().translate({ ord(c): None for c in '"' })
-        
+
         temp_stat_ids = buffer.split(',')
+
+        # load discord id's with administrator permissions
+        with open('admin_list.txt', 'r') as stream:
+            buffer = stream.read().translate({ ord(c): None for c in '"' })
+
+        temp_admin_list = buffer.split(',')
 
         # caching usernames to uuid
         files = glob.glob(os.path.join(self.stat_folder, '*.json'))
@@ -44,7 +51,7 @@ class CommandCache(object):
 
                     response = requests.get(url)
                     response.raise_for_status
-                    
+
                     response = json.loads(response.text)
                     value = response['properties'][0]['value']
                     textures = json.loads(base64.b64decode(value).decode('UTF-8'))
@@ -73,3 +80,4 @@ class CommandCache(object):
             self.names = temp_names
             self.uuids = temp_uuids
             self.stat_ids = temp_stat_ids
+            self.admin_list = temp_admin_list
