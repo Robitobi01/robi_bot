@@ -27,29 +27,32 @@ class ReloadCommand(BaseCommand):
                 await v.load_files()
 
     async def process(self, args, force_reload = False):
-        if self.message.author.id in self.cache.admin_list or force_reload:
+        async with CommandCache.semaphore:
+            if self.client:
+                if not self.message.author.id in self.cache.admin_list and not force_reload:
+                    await self.client.send_message(message.channel, 'You dont have permissions to do that!')
 
-            if self.client == None:
-                print('**Warning:** all files reloading, this might take a moment')
-            else:
-                await self.client.send_message(self.message.channel, '**Warning:** all files reloading, this might take a moment')
+                    return
 
-            start_time = time.time()
-
-            await self.load_files()
-
-            async with CommandCache.semaphore:
-                if self.client == None:
-                    print('Reloaded: **' + str(len(self.cache.uuids)) + '** files')
-                    print('Time: ' + str(round(time.time() - start_time, 2)) + 's')
-                else:
-                    em = discord.Embed(
-                        description = 'Reloaded: **' + str(len(self.cache.uuids)) + '** files',
-                        colour = 0x003763)
-
-                    em.set_author(name = 'File Reload', icon_url = 'https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
-                    em.set_footer(text = 'Time: ' + str(round(time.time() - start_time, 2)) + 's')
-
-                    await self.client.send_message(self.message.channel, embed = em)
+        if self.client:
+            await self.client.send_message(self.message.channel, '**Warning:** all files reloading, this might take a moment')
         else:
-             await self.client.send_message(message.channel, 'You dont have permissions to do that!')
+            print('**Warning:** all files reloading, this might take a moment')
+
+        start_time = time.time()
+
+        await self.load_files()
+
+        async with CommandCache.semaphore:
+            if self.client:
+                em = discord.Embed(
+                    description = 'Reloaded: **' + str(len(self.cache.uuids)) + '** files',
+                    colour = 0x003763)
+
+                em.set_author(name = 'File Reload', icon_url = 'https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
+                em.set_footer(text = 'Time: ' + str(round(time.time() - start_time, 2)) + 's')
+
+                await self.client.send_message(self.message.channel, embed = em)
+            else:
+                print('Reloaded: **' + str(len(self.cache.uuids)) + '** files')
+                print('Time: ' + str(round(time.time() - start_time, 2)) + 's')
