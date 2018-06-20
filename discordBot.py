@@ -9,7 +9,7 @@ import os
 FOLDER = os.path.dirname(__file__)
 
 CREATIVE_FOLDER = os.path.join(FOLDER, 'Creative')
-SURVIVAL_FOLDER =os.path.join(FOLDER, 'Survival')
+SURVIVAL_FOLDER = os.path.join(FOLDER, 'Survival')
 
 # Creative Directories
 STRUCTURE_FOLDER = os.path.join(CREATIVE_FOLDER, 'structures')
