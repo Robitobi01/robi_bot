@@ -21,13 +21,13 @@ class HelpCommand(BaseCommand):
 
         for k in self.commands.keys():
             if k != self.command_text:
-                help_text.append(self.commands[k].help()) 
+                help_text.append(self.commands[k].help())
 
         help_text = ''.join(help_text)
 
         if self.bot:
             em = discord.Embed(
-                description = 'This bot provides general information about the Dugged server. \nThe command prefix is **!!**.\n ',
+                description = 'This bot provides general information about the Dugged server. \nThe command prefix is **!!**.\n Addition `[A]` is only possible for administrators',
                 colour = 0x003763)
 
             em.add_field(name = 'Commands', inline = False, value = help_text)

@@ -48,7 +48,7 @@ class BenchmarkCommand(BaseCommand):
         super().__init__(bot, command_cache)
 
         self.stat_folder = stat_folder
-        
+
         self.benchmarks = dict()
 
     def help(self):
@@ -98,12 +98,12 @@ class BenchmarkCommand(BaseCommand):
             self.benchmarks[stat_id] = Benchmark(stat_id, stat_data)
 
             if self.bot:
-                await self.bot.send_message(message.channel, 'Benchmark started for: ' + stat_id)
+                await self.bot.send_message(message.channel, 'Benchmark started for: `' + stat_id + "`")
+                await self.bot.send_message(message.channel, 'Stop Command:\n!!benchmark stop `' + stat_id + "`")
                 await self.bot.send_message(message.channel, '**Warning:** Benchmarks need to run atleast 1 minute to detect any changes')
-                await self.bot.send_message(message.channel, 'Stop Command:\n!!benchmark stop ' + stat_id)
             else:
-                print('Benchmark started for: ' + stat_id)
-                print('Stop Command: !!benchmark stop ' + stat_id) 
+                print('Benchmark started for: ' + stat_id )
+                print('Stop Command: !!benchmark stop ' + stat_id)
                 print('**Warning:** Benchmarks need to run atleast 1 minute to detect any changes')
 
         # stop
@@ -150,7 +150,7 @@ class BenchmarkCommand(BaseCommand):
 
             for item in benchmark.stat_data:
                 delta = item.calc_delta()
-                
+
                 if delta > 0:
                     text1.append(item.name)
                     text2.append(str(delta))
@@ -174,10 +174,10 @@ class BenchmarkCommand(BaseCommand):
                         name = 'Per Hour',
                         inline = True,
                         value = '\n'.join(text3))
-                    
+
                     em.set_author(name = 'Benchmark', icon_url = 'https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
-                    em.set_footer(text = 'Total Time: ' + str(datetime.timedelta(seconds = benchmark.elapsed_time())))
-                    
+                    em.set_footer(text = 'Total Time: ' + str(datetime.timedelta(seconds = round(benchmark.elapsed_time(),0))))
+
                     await self.bot.send_message(message.channel, embed = em)
                 else:
                     print('Player, Delta, Per Hour')
@@ -198,7 +198,7 @@ class BenchmarkCommand(BaseCommand):
 
             for k, v in self.benchmarks.items():
                 text1.append(k)
-                text2.append(str(datetime.timedelta(seconds = v.elapsed_time(current_time))))
+                text2.append(str(datetime.timedelta(seconds = round(v.elapsed_time(current_time), 0))))
 
             if text1 == []:
                 if self.bot:
@@ -219,10 +219,10 @@ class BenchmarkCommand(BaseCommand):
                         name = 'Running Time',
                         inline = True,
                         value = '\n'.join(text2))
-                    
+
                     em.set_author(name = 'Benchmark List', icon_url = 'https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
                     em.set_footer(text = 'Active: ' + str(len(self.benchmarks.keys())))
-                    
+
                     await self.bot.send_message(message.channel, embed = em)
                 else:
                     print('Stat, Running Time')

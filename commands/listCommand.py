@@ -13,7 +13,7 @@ import os
 def first(iterable, condition = lambda x: True):
     for i in iterable:
         if condition(i):
-            return i 
+            return i
 
 class KnownLocation:
     """Contains information such as name and 2D bounding box for a known location on the Dugged server."""
@@ -27,7 +27,7 @@ class KnownLocation:
             min_z = z1 if z1 < z2 else z2
             max_x = x2 if x2 > x1 else x1
             max_z = z2 if z2 > z1 else z1
-            
+
             return KnownLocation(dimension, location_name, min_x, min_z, max_x, max_z)
         return None
 
@@ -55,7 +55,7 @@ class ListCommand(BaseCommand):
         self.minecraft_port = minecraft_port
         self.current_folder = current_folder
         self.playerdata_folder = playerdata_folder
-    
+
     def help(self):
         return '`' + self.command_text + '`  **-**  Displays currently online players and their dimension\n'
 
@@ -78,7 +78,7 @@ class ListCommand(BaseCommand):
         if query.players.online > 0:
             online_list = query.players.names
             text1 = []
-            
+
             async with CommandCache.semaphore:
                 for item in online_list:
                     nbt_file = nbt.NBTFile(os.path.join(self.playerdata_folder, convert_uuid(self.cache.uuids[self.cache.names.index(item)]) + '.dat'))
@@ -87,9 +87,8 @@ class ListCommand(BaseCommand):
                     dimension = nbt_file['Dimension'].value
                     x, y, z = (int(i.value) for i in nbt_file['Pos'])
                     known_location = first(ListCommand.known_locations[dimension], lambda i: i.is_contained(x, z))
-        
+
                     text1.append('**' + item + '** (' + ListCommand.dimensions.get(dimension, '?') + ('' if known_location == None else '@*' + known_location.location_name + '*') + ')')
-                
             if self.bot:
                 await self.bot.send_message(message.channel, 'Players: ' + ", ".join(text1))
             else:
@@ -98,5 +97,4 @@ class ListCommand(BaseCommand):
             if self.bot:
                 await self.bot.send_message(message.channel, 'No Player is currently online')
             else:
-                print('No Player is currently online')            
-
+                print('No Player is currently online')

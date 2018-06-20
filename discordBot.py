@@ -8,8 +8,8 @@ import os
 # Directories
 FOLDER = os.path.dirname(__file__)
 
-CREATIVE_FOLDER = os.path.join(FOLDER, 'Creative')
-SURVIVAL_FOLDER = os.path.join(FOLDER, 'Survival')
+CREATIVE_FOLDER = os.path.join(os.path.join(FOLDER, 'Creative'), 'Creative')
+SURVIVAL_FOLDER = os.path.join(os.path.join(FOLDER, 'Survival'), 'Survival')
 
 # Creative Directories
 STRUCTURE_FOLDER = os.path.join(CREATIVE_FOLDER, 'structures')
@@ -50,17 +50,13 @@ commands[synchronizeCommand.SynchronizeCommand.command_text] = synchronizeComman
 commands[tpsCommand.TpsCommand.command_text] = tpsCommand.TpsCommand(bot, command_cache, SURVIVAL_FOLDER)
 commands[worldsizeCommand.WorldsizeCommand.command_text] = worldsizeCommand.WorldsizeCommand(bot, command_cache, SURVIVAL_FOLDER, OVERWORLD_FOLDER, NETHER_FOLDER, END_FOLDER)
 
-initialized = False
-
 @bot.event
 async def on_ready():
     await bot.change_presence(game = discord.Game(name = '!!help'))
-
-    if not initialized:
+    if 'initialized' not in locals():
+        initialized = True
         # on_ready can be called more than once so only run !!reload if this is the first time.
         await commands[reloadCommand.ReloadCommand.command_text].process(None, None, force_reload = True)
-
-        initialized = True
 
     print("Bot is connected")
 
@@ -73,6 +69,6 @@ async def on_message(message):
         args = args[1:]
 
         if command_text in commands:
-            commands[command_text].process(message, args)
+            await commands[command_text].process(message, args)
 
 bot.run(token)

@@ -16,7 +16,7 @@ class ReloadCommand(BaseCommand):
         self.stat_folder = stat_folder
 
     def help(self):
-        return '`' + self.command_text + '`  **-**  Displays currently online players and their dimension\n'
+        return '`' + self.command_text + '`  **-**  Displays currently online players and their dimension[A]\n'
 
     async def load_files(self):
         # refresh the cache available to all commands
@@ -30,22 +30,21 @@ class ReloadCommand(BaseCommand):
     async def process(self, message, args, force_reload = False):
         async with CommandCache.semaphore:
             if self.bot:
-                if not message.author.id in self.cache.admin_list and not force_reload:
+                if message is not None and not message.author.id in self.cache.admin_list and not force_reload:
                     await self.bot.send_message(message.channel, 'You dont have permissions to do that!')
-
                     return
 
-        if self.bot:
+        if self.bot and message is not None:
             await self.bot.send_message(message.channel, '**Warning:** all files reloading, this might take a moment')
         else:
-            print('**Warning:** all files reloading, this might take a moment')
+            print('Warning: all files reloading, this might take a moment')
 
         start_time = time.time()
 
         await self.load_files()
 
         async with CommandCache.semaphore:
-            if self.bot:
+            if self.bot and message is not None:
                 em = discord.Embed(
                     description = 'Reloaded: **' + str(len(self.cache.uuids)) + '** files',
                     colour = 0x003763)
@@ -55,5 +54,5 @@ class ReloadCommand(BaseCommand):
 
                 await self.bot.send_message(message.channel, embed = em)
             else:
-                print('Reloaded: **' + str(len(self.cache.uuids)) + '** files')
+                print('Reloaded: ' + str(len(self.cache.uuids)) + ' files')
                 print('Time: ' + str(round(time.time() - start_time, 2)) + 's')
