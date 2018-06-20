@@ -44,8 +44,8 @@ class Benchmark(object):
 class BenchmarkCommand(BaseCommand):
     command_text = "!!benchmark"
 
-    def __init__(self, discord, client, message, command_cache, stat_folder):
-        super().__init__(discord, client, message, command_cache)
+    def __init__(self, bot, command_cache, stat_folder):
+        super().__init__(bot, command_cache)
 
         self.stat_folder = stat_folder
         
@@ -56,22 +56,22 @@ class BenchmarkCommand(BaseCommand):
             '`' + self.command_text + ' stop <stat>`  **-**  Stops benchmark and displays results\n'
             '`' + self.command_text + ' list`  **-**  Displays list of running benchmarks\n')
 
-    async def process(self, args):
+    async def process(self, message, args):
         # start
-        if len(args) == 3 and args[1] == 'start':
+        if len(args) == 2 and args[0] == 'start':
             async with CommandCache.semaphore:
                 try:
-                    stat_id = ''.join(get_close_matches('stat.' + args[2], self.cache.stat_ids, 1))
+                    stat_id = ''.join(get_close_matches('stat.' + args[1], self.cache.stat_ids, 1))
 
                     if stat_id == '':
-                        if self.client:
-                            await self.client.send_message(self.message.channel, 'Invalid stat')
+                        if self.bot:
+                            await self.bot.send_message(message.channel, 'Invalid stat')
                         else:
                             print('Invalid stat')
 
                     if stat_id in self.benchmarks:
-                        if self.client:
-                            await self.client.send_message(self.message.channel, 'Benchmark already started for: ' + stat_id)
+                        if self.bot:
+                            await self.bot.send_message(message.channel, 'Benchmark already started for: ' + stat_id)
                         else:
                             print('Benchmark already running for: ' + stat_id)
 
@@ -88,8 +88,8 @@ class BenchmarkCommand(BaseCommand):
                         value = stats[stat_id] if stat_id in stats else 0
                         stat_data.append(StatData(uuid, name, value, time.time()))
                 except:
-                    if self.client:
-                        await self.client.send_message(self.message.channel, 'Invalid stat')
+                    if self.bot:
+                        await self.bot.send_message(message.channel, 'Invalid stat')
                     else:
                         print('Invalid stat')
 
@@ -97,37 +97,37 @@ class BenchmarkCommand(BaseCommand):
 
             self.benchmarks[stat_id] = Benchmark(stat_id, stat_data)
 
-            if self.client:
-                await self.client.send_message(self.message.channel, 'Benchmark started for: ' + stat_id)
-                await self.client.send_message(self.message.channel, '**Warning:** Benchmarks need to run atleast 1 minute to detect any changes')
-                await self.client.send_message(self.message.channel, 'Stop Command:\n!!benchmark stop ' + stat_id)
+            if self.bot:
+                await self.bot.send_message(message.channel, 'Benchmark started for: ' + stat_id)
+                await self.bot.send_message(message.channel, '**Warning:** Benchmarks need to run atleast 1 minute to detect any changes')
+                await self.bot.send_message(message.channel, 'Stop Command:\n!!benchmark stop ' + stat_id)
             else:
                 print('Benchmark started for: ' + stat_id)
                 print('Stop Command: !!benchmark stop ' + stat_id) 
                 print('**Warning:** Benchmarks need to run atleast 1 minute to detect any changes')
 
         # stop
-        elif len(args) == 3 and args[1] == 'stop':
+        elif len(args) == 2 and args[0] == 'stop':
             async with CommandCache.semaphore:
                 try:
-                    stat_id = ''.join(get_close_matches('stat.' + args[2], self.cache.stat_ids, 1))
+                    stat_id = ''.join(get_close_matches('stat.' + args[1], self.cache.stat_ids, 1))
 
                     if stat_id == '':
-                        if self.client:
-                            await self.client.send_message(self.message.channel, 'Invalid stat')
+                        if self.bot:
+                            await self.bot.send_message(message.channel, 'Invalid stat')
                         else:
                             print('Invalid stat')
                 except:
-                    if self.client:
-                        await self.client.send_message(self.message.channel, 'Invalid stat')
+                    if self.bot:
+                        await self.bot.send_message(message.channel, 'Invalid stat')
                     else:
                         print('Invalid stat')
 
                     return
 
             if not stat_id in self.benchmarks:
-                if self.client:
-                    await self.client.send_message(self.message.channel, 'No running benchmark found for: ' + stat_id)
+                if self.bot:
+                    await self.bot.send_message(message.channel, 'No running benchmark found for: ' + stat_id)
                 else:
                     print('No running benchmark found for: ' + stat_id)
 
@@ -157,7 +157,7 @@ class BenchmarkCommand(BaseCommand):
                     text3.append(str(item.calc_rate_per_hour()))
 
             if text1 != []:
-                if self.client:
+                if self.bot:
                     em = discord.Embed(
                         description = '',
                         colour = 0x003763)
@@ -178,19 +178,19 @@ class BenchmarkCommand(BaseCommand):
                     em.set_author(name = 'Benchmark', icon_url = 'https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
                     em.set_footer(text = 'Total Time: ' + str(datetime.timedelta(seconds = benchmark.elapsed_time())))
                     
-                    await self.client.send_message(self.message.channel, embed = em)
+                    await self.bot.send_message(message.channel, embed = em)
                 else:
                     print('Player, Delta, Per Hour')
 
                     for item in zip(text1, text2, text3):
                         print(item[0] + ', ' + item[1] + ', ' + item[2])
             else:
-                if self.client:
-                    await self.client.send_message(self.message.channel, 'No changes detected, stop being lazy!')
+                if self.bot:
+                    await self.bot.send_message(message.channel, 'No changes detected, stop being lazy!')
                 else:
                     print('No changes detected, stop being lazy!')
         # list
-        elif len(args) == 2 and args[1] == 'list':
+        elif len(args) == 1 and args[0] == 'list':
             current_time = time.time()
 
             text1 = []
@@ -201,12 +201,12 @@ class BenchmarkCommand(BaseCommand):
                 text2.append(str(datetime.timedelta(seconds = v.elapsed_time(current_time))))
 
             if text1 == []:
-                if self.client:
-                    await self.client.send_message(self.message.channel, 'No benchmarks currently running')
+                if self.bot:
+                    await self.bot.send_message(message.channel, 'No benchmarks currently running')
                 else:
                     print('No benchmarks currently running')
             else:
-                if self.client:
+                if self.bot:
                     em = discord.Embed(
                         description = '',
                         colour = 0x003763)
@@ -223,14 +223,14 @@ class BenchmarkCommand(BaseCommand):
                     em.set_author(name = 'Benchmark List', icon_url = 'https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
                     em.set_footer(text = 'Active: ' + str(len(self.benchmarks.keys())))
                     
-                    await self.client.send_message(self.message.channel, embed = em)
+                    await self.bot.send_message(message.channel, embed = em)
                 else:
                     print('Stat, Running Time')
 
                     for item in zip(text1, text2):
                         print(item[0] + ', ' + item[1])
         else:
-            if self.client:
-                await self.client.send_message(self.message.channel, 'Invalid syntax')
+            if self.bot:
+                await self.bot.send_message(message.channel, 'Invalid syntax')
             else:
                 print('Invalid syntax')
