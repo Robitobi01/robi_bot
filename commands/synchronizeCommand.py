@@ -13,17 +13,17 @@ import os
 class SynchronizeCommand(BaseCommand):
     command_text = "!!synchronize"
 
-    def __init__(self, discord, client, message, command_cache, data_folder):
-        super().__init__(discord, client, message, command_cache)
+    def __init__(self, bot, command_cache, data_folder):
+        super().__init__(bot, command_cache)
 
         self.data_folder = data_folder
 
     def help(self):
         return '`' + self.command_text + '`  **-**  Synchronizes stats and scoreboards and enables namechanges\n'
 
-    async def process(self, args):
+    async def process(self, message, args):
         async with CommandCache.semaphore:
-            if self.message.author.id in self.cache.admin_list:
+            if message.author.id in self.cache.admin_list:
                 #removes entries that store namehistory usernames
                 nbtfile = nbt.NBTFile(os.path.join(self.data_folder, 'scoreboard.dat'))
 
@@ -58,6 +58,6 @@ class SynchronizeCommand(BaseCommand):
 
                 nbtfile.write_file(os.path.join(self.data_folder, 'scoreboard.dat'))
 
-                await self.client.send_message(message.channel, 'Scoreboard and Statistics are now synchronized')
+                await self.bot.send_message(message.channel, 'Scoreboard and Statistics are now synchronized')
             else:
-                await self.client.send_message(message.channel, 'You dont have permissions to do that!')
+                await self.bot.send_message(message.channel, 'You dont have permissions to do that!')

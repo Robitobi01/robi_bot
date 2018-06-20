@@ -3,13 +3,14 @@ from .commandCache import CommandCache
 
 from utils import *
 
+import discord
 import time
 
 class ReloadCommand(BaseCommand):
     command_text = "!!reload"
 
-    def __init__(self, discord, client, message, command_cache, commands, stat_folder):
-        super().__init__(discord, client, message, command_cache)
+    def __init__(self, bot, command_cache, commands, stat_folder):
+        super().__init__(bot, command_cache)
 
         self.commands = commands
         self.stat_folder = stat_folder
@@ -26,16 +27,16 @@ class ReloadCommand(BaseCommand):
             if k != self.command_text:
                 await v.load_files()
 
-    async def process(self, args, force_reload = False):
+    async def process(self, message, args, force_reload = False):
         async with CommandCache.semaphore:
-            if self.client:
-                if not self.message.author.id in self.cache.admin_list and not force_reload:
-                    await self.client.send_message(message.channel, 'You dont have permissions to do that!')
+            if self.bot:
+                if not message.author.id in self.cache.admin_list and not force_reload:
+                    await self.bot.send_message(message.channel, 'You dont have permissions to do that!')
 
                     return
 
-        if self.client:
-            await self.client.send_message(self.message.channel, '**Warning:** all files reloading, this might take a moment')
+        if self.bot:
+            await self.bot.send_message(message.channel, '**Warning:** all files reloading, this might take a moment')
         else:
             print('**Warning:** all files reloading, this might take a moment')
 
@@ -44,7 +45,7 @@ class ReloadCommand(BaseCommand):
         await self.load_files()
 
         async with CommandCache.semaphore:
-            if self.client:
+            if self.bot:
                 em = discord.Embed(
                     description = 'Reloaded: **' + str(len(self.cache.uuids)) + '** files',
                     colour = 0x003763)
@@ -52,7 +53,7 @@ class ReloadCommand(BaseCommand):
                 em.set_author(name = 'File Reload', icon_url = 'https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
                 em.set_footer(text = 'Time: ' + str(round(time.time() - start_time, 2)) + 's')
 
-                await self.client.send_message(self.message.channel, embed = em)
+                await self.bot.send_message(message.channel, embed = em)
             else:
                 print('Reloaded: **' + str(len(self.cache.uuids)) + '** files')
                 print('Time: ' + str(round(time.time() - start_time, 2)) + 's')
