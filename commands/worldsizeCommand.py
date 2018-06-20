@@ -8,8 +8,8 @@ import os
 class WorldsizeCommand(BaseCommand):
     command_text = "!!worldsize"
 
-    def __init__(self, discord, client, message, command_cache, survival_folder, overworld_folder, nether_folder, end_folder):
-        super().__init__(discord, client, message, command_cache)
+    def __init__(self, bot, command_cache, survival_folder, overworld_folder, nether_folder, end_folder):
+        super().__init__(bot, command_cache)
 
         self.survival_folder = survival_folder
         self.overworld_folder = overworld_folder
@@ -19,7 +19,7 @@ class WorldsizeCommand(BaseCommand):
     def help(self):
         return '`' + self.command_text + '`  **-**  Shows current world sizes\n'
     
-    async def process(self, args):
+    async def process(self, message, args):
         try:
             # Get sizes in GB
             total_size = round(get_size(self.survival_folder) / 1073741824, 2)
@@ -27,12 +27,7 @@ class WorldsizeCommand(BaseCommand):
             nether_size = round(get_size(self.nether_folder) / 1073741824, 2)
             end_size = round(get_size(self.end_folder) / 1073741824, 2)
             
-            if self.client == None:
-                print('Overworld = ' + str(overworld_size) + ' GB')
-                print('Nether = ' + str(nether_size) + ' GB')
-                print('End = ' + str(end_size) + ' GB')
-                print('Total = ' + str(total_size) + ' GB')
-            else:
+            if self.bot:
                 em = discord.Embed(
                     description = '',
                     colour = 0x003763)
@@ -49,10 +44,15 @@ class WorldsizeCommand(BaseCommand):
                 em.set_author(name = 'World Size:', icon_url = 'https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
                 em.set_footer(text = 'Total World Size: ' + str(total_size) + 'GB')
             
-                await self.client.send_message(self.message.channel, embed = em)
-        except:
-            if self.client == None:
-                print('An error occurred while calculating world size')
+                await self.bot.send_message(message.channel, embed = em)
             else:
-                await self.client.send_message(self.message.channel, 'An error occurred while calculating world size')
+                print('Overworld = ' + str(overworld_size) + ' GB')
+                print('Nether = ' + str(nether_size) + ' GB')
+                print('End = ' + str(end_size) + ' GB')
+                print('Total = ' + str(total_size) + ' GB')
+        except:
+            if self.bot:
+                await self.bot.send_message(message.channel, 'An error occurred while calculating world size')
+            else:
+                print('An error occurred while calculating world size')
 
