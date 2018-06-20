@@ -48,8 +48,8 @@ class ListCommand(BaseCommand):
     dimensions = { -1: 'N', 0: 'O', 1: 'E' }
     known_locations = { -1: [], 0: [], 1: [] }
 
-    def __init__(self, discord, client, message, command_cache, minecraft_ip, minecraft_port, current_folder, playerdata_folder):
-        super().__init__(discord, client, message, command_cache)
+    def __init__(self, bot, command_cache, minecraft_ip, minecraft_port, current_folder, playerdata_folder):
+        super().__init__(bot, command_cache)
 
         self.minecraft_ip = minecraft_ip
         self.minecraft_port = minecraft_port
@@ -71,7 +71,7 @@ class ListCommand(BaseCommand):
                 if known_location != None:
                     ListCommand.known_locations[known_location.dimension].append(known_location)
 
-    async def process(self, args):
+    async def process(self, message, args):
         server = MinecraftServer(self.minecraft_ip, self.minecraft_port)
         query = server.query()
 
@@ -90,13 +90,13 @@ class ListCommand(BaseCommand):
         
                     text1.append('**' + item + '** (' + ListCommand.dimensions.get(dimension, '?') + ('' if known_location == None else '@*' + known_location.location_name + '*') + ')')
                 
-            if self.client == None:
+            if self.bot:
+                await self.bot.send_message(message.channel, 'Players: ' + ", ".join(text1))
+            else:
                 print('Players: ' + ', '.join(text1))
-            else:
-                await self.client.send_message(self.message.channel, 'Players: ' + ", ".join(text1))
         else:
-            if self.client == None:
-                print('No Player is currently online')            
+            if self.bot:
+                await self.bot.send_message(message.channel, 'No Player is currently online')
             else:
-                await self.client.send_message(self.message.channel, 'No Player is currently online')
+                print('No Player is currently online')            
 
