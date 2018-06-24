@@ -58,7 +58,6 @@ def generate_embed_table(columns, values, line = False):
         colour = 0x003763)
 
     for column in columns:
-        print(values[columns.index(column)])
         em.add_field(
             name = column,
             inline = line,
