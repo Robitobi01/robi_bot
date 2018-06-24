@@ -37,6 +37,7 @@ with open('token.txt','r') as f:
 bot = Bot(command_prefix = "!!")
 command_cache = commandCache.CommandCache(STAT_FOLDER, False)
 
+
 commands = dict()
 commands[benchmarkCommand.BenchmarkCommand.command_text] = benchmarkCommand.BenchmarkCommand(bot, command_cache, STAT_FOLDER)
 commands[hardwareCommand.HardwareCommand.command_text] = hardwareCommand.HardwareCommand(bot, command_cache)
@@ -45,6 +46,7 @@ commands[listCommand.ListCommand.command_text] = listCommand.ListCommand(bot, co
 commands[reloadCommand.ReloadCommand.command_text] = reloadCommand.ReloadCommand(bot, command_cache, commands, STAT_FOLDER)
 commands[scoreboardCommand.ScoreboardCommand.command_text] = scoreboardCommand.ScoreboardCommand(bot, command_cache, DATA_FOLDER)
 commands[statCommand.StatCommand.command_text] = statCommand.StatCommand(bot, command_cache, STAT_FOLDER)
+commands[statusCommand.StatusCommand.command_text] = statusCommand.StatusCommand(bot, command_cache)
 commands[structureCommand.StructureCommand.command_text] = structureCommand.StructureCommand(bot, command_cache, STRUCTURE_FOLDER)
 commands[synchronizeCommand.SynchronizeCommand.command_text] = synchronizeCommand.SynchronizeCommand(bot, command_cache, DATA_FOLDER)
 commands[tpsCommand.TpsCommand.command_text] = tpsCommand.TpsCommand(bot, command_cache, SURVIVAL_FOLDER)

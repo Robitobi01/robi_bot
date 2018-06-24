@@ -19,7 +19,7 @@ def get_size(start_path):
         for f in filenames:
             fp = os.path.join(dirpath, f)
             total_size += os.path.getsize(fp)
-    
+
     return total_size
 
 #returns all names in the namehistory of a uuid without duplicates or the current name
@@ -29,11 +29,11 @@ def get_name_history(uuid):
     response = requests.get(url)
     response.raise_for_status
     response = json.loads(response.text)
-    
+
     current_name = response[-1]['name']
-    
+
     del response[-1]
-    
+
     if response != []:
         for name in response:
             if name['name'] == current_name:
@@ -52,13 +52,15 @@ def get_name_from_uuid(uuid):
         return response['profileName']
     except: return None
 
-def generate_embed_table(discord, columns_lines):
+def generate_embed_table(columns, values, line = False):
     em = discord.Embed(
         description = '',
         colour = 0x003763)
 
-    for column in columns_lines:
+    for column in columns:
+        print(values[columns.index(column)])
         em.add_field(
             name = column,
-            inline = True,
-            value = '\n'.join(column_lines[column]))
+            inline = line,
+            value = values[columns.index(column)])
+    return em

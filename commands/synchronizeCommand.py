@@ -19,7 +19,7 @@ class SynchronizeCommand(BaseCommand):
         self.data_folder = data_folder
 
     def help(self):
-        return '`' + self.command_text + '`  **-**  Synchronizes stats and scoreboards and enables namechanges[A]\n'
+        return '`' + self.command_text + '`  **-**  Synchronizes stats and scoreboards[A]\n'
 
     async def process(self, message, args):
         async with CommandCache.semaphore:
