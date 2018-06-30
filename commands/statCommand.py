@@ -29,7 +29,8 @@ class StatCommand(BaseCommand):
                     player_name = ''.join(get_close_matches(args[1], self.cache.names, 1))
                     uuid = convert_uuid(self.cache.uuids[self.cache.names.index(player_name)])
 
-                    stat_id = ''.join(get_close_matches('stat.' + args[2], self.cache.stat_ids, 1))
+                    stat_id = 'stat.' + args[2] if not args[2].startswith('stat.') else args[2]
+                    stat_id = ''.join(get_close_matches(stat_id, self.cache.stat_ids, 1))
 
                     if stat_id == '':
                         if self.bot:
@@ -81,7 +82,8 @@ class StatCommand(BaseCommand):
         elif len(args) == 2 and args[0] == 'list':
             async with CommandCache.semaphore:
                 try:
-                    stat_id = ''.join(get_close_matches('stat.' + args[1], self.cache.stat_ids, 1))
+                    stat_id = 'stat.' + args[1] if not args[1].startswith('stat.') else args[1]
+                    stat_id = ''.join(get_close_matches(stat_id, self.cache.stat_ids, 1))
 
                     if stat_id == '':
                         if self.bot:
