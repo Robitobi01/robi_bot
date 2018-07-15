@@ -17,22 +17,29 @@ class HelpCommand(BaseCommand):
         self.commands = commands
 
     async def process(self, message, args):
+        if args == '' or len(args) > 1 or not ''.join(args).isdigit() : args = 1
+        else: args = int(''.join(args))
         help_text = []
+        avaliable_pages = [1]
 
-        for k in self.commands.keys():
-            if k != self.command_text:
-                help_text.append(self.commands[k].help())
+        if args == 1:
+            for k in self.commands.keys():
+                if k != self.command_text:
+                    help_text.append(self.commands[k].help())
+
+        if args not in avaliable_pages:
+            help_text.append('This page doesnt exist yet!')
 
         help_text = ''.join(help_text)
 
         if self.bot:
             em = discord.Embed(
-                description = 'This bot provides general information about the Dugged server. \nThe command prefix is **!!**.\n Addition `[A]` is only possible for administrators',
+                description = 'This bot provides general information about the Dugged server. \nThe command prefix is **!!**.\nAddition `[A]` is only possible for administrators\nAdd number of page as argument to show other pages',
                 colour = 0x003763)
 
-            em.add_field(name = 'Commands', inline = False, value = help_text)
-            em.set_author(name = 'Help',  url = 'https://twitter.com/Robitobi01', icon_url = 'https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
-            em.set_footer(text = 'Made by Robitobi01', icon_url = 'https://pbs.twimg.com/profile_images/924434100441755649/MZOP8WK7.jpg')
+            em.add_field(name = 'Commands - Page: ' + str(args), inline = False, value = help_text)
+            em.set_author(name = 'Help',  url = 'https://github.com/Robitobi01/Discord-Bot', icon_url = 'https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
+            em.set_footer(text = 'Made by Robitobi01 and veirden', icon_url = 'https://cdn.discordapp.com/avatars/400833990359253002/74b8b6de441bce1a59f9c4ac74f666e6.png')
 
             await self.bot.send_message(message.channel, embed = em)
         else:
