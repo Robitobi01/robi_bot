@@ -16,7 +16,7 @@ class ReloadCommand(BaseCommand):
         self.stat_folder = stat_folder
 
     def help(self):
-        return '`' + self.command_text + '`  **-**  Displays currently online players and their dimension[A]\n'
+        return '`' + self.command_text + '`  **-**  Reloads all files[A]\n'
 
     async def load_files(self):
         # refresh the cache available to all commands
