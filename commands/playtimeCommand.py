@@ -103,23 +103,23 @@ class PlaytimeCommand(BaseCommand):
                     em.add_field(
                         name = 'Players',
                         inline = True,
-                        value = '\n'.join(text_names[::]))
+                        value = '\n'.join(text_names))
                     em.add_field(
                         name = 'Years',
                         inline = True,
-                        value = '\n'.join(text_years[::]))
+                        value = '\n'.join(text_years))
                     em.add_field(
                         name = 'Days',
                         inline = True,
-                        value = '\n'.join(text_days[::]))
+                        value = '\n'.join(text_days))
                     em.add_field(
                         name = 'Hours',
                         inline = True,
-                        value = '\n'.join(text_hours[::]))
+                        value = '\n'.join(text_hours))
                     em.add_field(
                         name = 'Minutes',
                         inline = True,
-                        value = '\n'.join(text_minutes[::]))
+                        value = '\n'.join(text_minutes))
                             
                     em.set_author(
                         name = 'Total Playtime', 
@@ -149,7 +149,7 @@ class PlaytimeCommand(BaseCommand):
 
                     text.append(', ' + str(total_minutes % 60))
 
-                    print(''.join(text[::]))
+                    print(''.join(text))
                     print('Total: {:,} minutes'.format(total_minutes))        
         elif len(args) == 1:
             async with CommandCache.semaphore:
