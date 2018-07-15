@@ -37,12 +37,12 @@ with open('token.txt','r') as f:
 bot = Bot(command_prefix = "!!")
 command_cache = commandCache.CommandCache(STAT_FOLDER, False)
 
-
 commands = dict()
 commands[benchmarkCommand.BenchmarkCommand.command_text] = benchmarkCommand.BenchmarkCommand(bot, command_cache, STAT_FOLDER)
 commands[hardwareCommand.HardwareCommand.command_text] = hardwareCommand.HardwareCommand(bot, command_cache)
 commands[helpCommand.HelpCommand.command_text] = helpCommand.HelpCommand(bot, command_cache, commands)
 commands[listCommand.ListCommand.command_text] = listCommand.ListCommand(bot, command_cache, minecraft_ip, minecraft_port, FOLDER, PLAYERDATA_FOLDER)
+commands[playtimeCommand.PlaytimeCommand.command_text] = playtimeCommand.PlaytimeCommand(bot, command_cache, STAT_FOLDER)
 commands[reloadCommand.ReloadCommand.command_text] = reloadCommand.ReloadCommand(bot, command_cache, commands, STAT_FOLDER)
 commands[scoreboardCommand.ScoreboardCommand.command_text] = scoreboardCommand.ScoreboardCommand(bot, command_cache, DATA_FOLDER)
 commands[statCommand.StatCommand.command_text] = statCommand.StatCommand(bot, command_cache, STAT_FOLDER)
@@ -55,6 +55,7 @@ commands[worldsizeCommand.WorldsizeCommand.command_text] = worldsizeCommand.Worl
 @bot.event
 async def on_ready():
     await bot.change_presence(game = discord.Game(name = '!!help'))
+
     if 'initialized' not in locals():
         initialized = True
         # on_ready can be called more than once so only run !!reload if this is the first time.
