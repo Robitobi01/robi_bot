@@ -118,7 +118,7 @@ class StatCommand(BaseCommand):
                     print('No playerfile or stat found')
             else:
                 if self.bot:
-                    text1, text2 = zip(*sorted(zip(text1, text2)))
+                    text1, text2 = zip(*sorted(zip(text1, text2), reverse = True))
 
                     em = discord.Embed(
                         description = '',
@@ -127,11 +127,11 @@ class StatCommand(BaseCommand):
                     em.add_field(
                         name = 'Players',
                         inline = True,
-                        value = '\n'.join(text2[::-1]))
+                        value = '\n'.join(text2))
                     em.add_field(
                         name = 'Result',
                         inline = True,
-                        value = '\n'.join(str(x) for x in text1[::-1]))
+                        value = '\n'.join(str(x) for x in text1))
                             
                     em.set_author(
                         name = stat_id + ' - Ranking', 
@@ -142,7 +142,7 @@ class StatCommand(BaseCommand):
                 else:
                     print(stat_id + ' Ranking')
 
-                    for item in reversed(sorted(zip(text1, text2))):
+                    for item in sorted(zip(text1, text2), reverse = True):
                         print(str(item[0]) + ", " + item[1])
 
                     print('Total: ' + str(total) + '    |    ' + str(round((total / 1000000), 2)) + ' M')
