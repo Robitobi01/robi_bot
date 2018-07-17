@@ -74,7 +74,7 @@ class PlaytimeCommand(BaseCommand):
         return ('`' + self.command_text + ' [<user_name> [<user_name> ...]]`  **-**  Shows playtime for players\n'
                 '`' + self.command_text + ' server`  **-**  Shows survival world times\n')
 
-    async def processPlayers(self, players):
+    async def processPlayers(self, message, players):
         try:
             stat_id = 'stat.playOneMinute'
             total_ticks = 0
@@ -157,7 +157,7 @@ class PlaytimeCommand(BaseCommand):
                     for item in zip(self.cache.names, self.cache.uuids):
                         players.append(PlayerInfo(item[0], convert_uuid(item[1])))
 
-                await self.processPlayers(players)
+                await self.processPlayers(message, players)
             except:
                 if self.bot:
                     await self.bot.send_message(message.channel, 'No playerfile or stat found')
@@ -274,7 +274,7 @@ class PlaytimeCommand(BaseCommand):
 
                         players.append(PlayerInfo(player_name, uuid))
 
-                await self.processPlayers(players)
+                await self.processPlayers(message, players)
             except:
                 if self.bot:
                     await self.bot.send_message(message.channel, 'No playerfile or stat found')
