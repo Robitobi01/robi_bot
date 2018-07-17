@@ -8,6 +8,7 @@ import discord
 import json
 import os
 
+# http://docopt.org/
 class HelpCommand(BaseCommand):
     command_text = "!!help"
 
