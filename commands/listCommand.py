@@ -89,8 +89,9 @@ class ListCommand(BaseCommand):
                     known_location = first(ListCommand.known_locations[dimension], lambda i: i.is_contained(x, z))
 
                     text1.append('**' + item + '** (' + ListCommand.dimensions.get(dimension, '?') + ('' if known_location == None else '@*' + known_location.location_name + '*') + ')')
+                
             if self.bot:
-                await self.bot.send_message(message.channel, 'Players: ' + ", ".join(text1))
+                await self.bot.send_message(message.channel, 'Players: ' + ', '.join(text1))
             else:
                 print('Players: ' + ', '.join(text1))
         else:

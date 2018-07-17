@@ -26,10 +26,11 @@ class StatCommand(BaseCommand):
         if len(args) == 3 and args[0] == 'player':
             async with CommandCache.semaphore:
                 try:
-                    player_name = ''.join(get_close_matches(args[1], self.cache.names, 1))
-                    uuid = convert_uuid(self.cache.uuids[self.cache.names.index(player_name)])
+                    lower_name = ''.join(get_close_matches(args[1], self.cache.lower_names, 1))
+                    uuid = convert_uuid(self.cache.uuids[self.cache.lower_names.index(lower_name)])
+                    player_name = self.cache.names[self.cache.lower_names.index(lower_name)]
 
-                    stat_id = 'stat.' + args[2] if not args[2].startswith('stat.') else args[2]
+                    stat_id = 'stat.' + args[2] if not args[2].startswith('stat') else args[2]
                     stat_id = ''.join(get_close_matches(stat_id, self.cache.stat_ids, 1))
 
                     if stat_id == '':
@@ -82,7 +83,7 @@ class StatCommand(BaseCommand):
         elif len(args) == 2 and args[0] == 'list':
             async with CommandCache.semaphore:
                 try:
-                    stat_id = 'stat.' + args[1] if not args[1].startswith('stat.') else args[1]
+                    stat_id = 'stat.' + args[1] if not args[1].startswith('stat') else args[1]
                     stat_id = ''.join(get_close_matches(stat_id, self.cache.stat_ids, 1))
 
                     if stat_id == '':
@@ -143,7 +144,7 @@ class StatCommand(BaseCommand):
                     print(stat_id + ' Ranking')
 
                     for item in sorted(zip(text1, text2), reverse = True):
-                        print(str(item[0]) + ", " + item[1])
+                        print(str(item[0]) + ', ' + item[1])
 
                     print('Total: ' + str(total) + '    |    ' + str(round((total / 1000000), 2)) + ' M')
         else:
