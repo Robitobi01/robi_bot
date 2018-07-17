@@ -35,7 +35,7 @@ with open('token.txt','r') as f:
     token = f.read()
 
 bot = Bot(command_prefix = "!!")
-command_cache = commandCache.CommandCache(STAT_FOLDER, False)
+command_cache = commandCache.CommandCache(STAT_FOLDER, True)
 
 commands = dict()
 commands[benchmarkCommand.BenchmarkCommand.command_text] = benchmarkCommand.BenchmarkCommand(bot, command_cache, STAT_FOLDER)
