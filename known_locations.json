@@ -40,5 +40,6 @@
   [ 0, "Wool Farm", -2073, -1096, -2190, -1205 ],
   [ 0, "Map Area", 0, 0, 0, 0 ],
   // End
-  [ 1, "Sugar Cane Farm", 0, 0, 0, 0 ]
+  [ 1, "Main Island", 40, 41, -41, -40 ],
+  [ 1, "Sugar Cane Farm", 467, 638, 435, 604 ]
 ]
