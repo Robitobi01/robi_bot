@@ -8,19 +8,19 @@ import os
 # Directories
 FOLDER = os.path.dirname(__file__)
 
-CREATIVE_FOLDER = os.path.join(os.path.join(FOLDER, 'Creative'), 'Creative')
-SURVIVAL_FOLDER = os.path.join(os.path.join(FOLDER, 'Survival'), 'Survival')
+CREATIVE_FOLDER = os.path.join(FOLDER, 'Creative', 'Creative')
+SURVIVAL_FOLDER = os.path.join(FOLDER, 'Survival', 'Survival')
 
 # Creative Directories
 STRUCTURE_FOLDER = os.path.join(CREATIVE_FOLDER, 'structures')
 
 # Survival Directories
-DATA_FOLDER = os.path.join(SURVIVAL_FOLDER,'data')
+DATA_FOLDER = os.path.join(SURVIVAL_FOLDER, 'data')
 END_FOLDER = os.path.join(SURVIVAL_FOLDER, 'DIM1', 'region')
 NETHER_FOLDER = os.path.join(SURVIVAL_FOLDER, 'DIM-1', 'region')
 OVERWORLD_FOLDER = os.path.join(SURVIVAL_FOLDER, 'region')
-PLAYERDATA_FOLDER = os.path.join(SURVIVAL_FOLDER,'playerdata')
-STAT_FOLDER = os.path.join(SURVIVAL_FOLDER,'stats')
+PLAYERDATA_FOLDER = os.path.join(SURVIVAL_FOLDER, 'playerdata')
+STAT_FOLDER = os.path.join(SURVIVAL_FOLDER, 'stats')
 
 # Create missing directories
 if not os.path.exists(STRUCTURE_FOLDER):
@@ -35,14 +35,14 @@ with open('token.txt','r') as f:
     token = f.read()
 
 bot = Bot(command_prefix = "!!")
-command_cache = commandCache.CommandCache(STAT_FOLDER, False)
+command_cache = commandCache.CommandCache(STAT_FOLDER, True)
 
 commands = dict()
 commands[benchmarkCommand.BenchmarkCommand.command_text] = benchmarkCommand.BenchmarkCommand(bot, command_cache, STAT_FOLDER)
 commands[hardwareCommand.HardwareCommand.command_text] = hardwareCommand.HardwareCommand(bot, command_cache)
 commands[helpCommand.HelpCommand.command_text] = helpCommand.HelpCommand(bot, command_cache, commands)
 commands[listCommand.ListCommand.command_text] = listCommand.ListCommand(bot, command_cache, minecraft_ip, minecraft_port, FOLDER, PLAYERDATA_FOLDER)
-commands[playtimeCommand.PlaytimeCommand.command_text] = playtimeCommand.PlaytimeCommand(bot, command_cache, STAT_FOLDER)
+commands[playtimeCommand.PlaytimeCommand.command_text] = playtimeCommand.PlaytimeCommand(bot, command_cache, SURVIVAL_FOLDER, STAT_FOLDER)
 commands[reloadCommand.ReloadCommand.command_text] = reloadCommand.ReloadCommand(bot, command_cache, commands, STAT_FOLDER)
 commands[scoreboardCommand.ScoreboardCommand.command_text] = scoreboardCommand.ScoreboardCommand(bot, command_cache, DATA_FOLDER)
 commands[statCommand.StatCommand.command_text] = statCommand.StatCommand(bot, command_cache, STAT_FOLDER)
