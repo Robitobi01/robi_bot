@@ -61,7 +61,7 @@ class BenchmarkCommand(BaseCommand):
         if len(args) == 2 and args[0] == 'start':
             async with CommandCache.semaphore:
                 try:
-                    stat_id = 'stat.' + args[1] if not args[1].startswith('stat.') else args[1]
+                    stat_id = 'stat.' + args[1] if not args[1].startswith('stat') else args[1]
                     stat_id = ''.join(get_close_matches(stat_id, self.cache.stat_ids, 1))
 
                     if stat_id == '':
@@ -111,7 +111,7 @@ class BenchmarkCommand(BaseCommand):
         elif len(args) == 2 and args[0] == 'stop':
             async with CommandCache.semaphore:
                 try:
-                    stat_id = 'stat.' + args[1] if not args[1].startswith('stat.') else args[1]
+                    stat_id = 'stat.' + args[1] if not args[1].startswith('stat') else args[1]
                     stat_id = ''.join(get_close_matches(stat_id, self.cache.stat_ids, 1))
 
                     if stat_id == '':
