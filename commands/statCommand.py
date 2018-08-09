@@ -154,7 +154,6 @@ class StatCommand(BaseCommand):
                 try:
                     stat_id = 'stat.' + args[1] if not args[1].startswith('stat') else args[1]
                     stat_id = ''.join(get_close_matches(stat_id, self.cache.stat_ids, 1))
-
                     if stat_id == '':
                         if self.bot:
                             await self.bot.send_message(message.channel, 'Invalid stat')
@@ -162,14 +161,10 @@ class StatCommand(BaseCommand):
                             print('Invalid stat')
 
                     total = 0
-
                     for item in self.cache.uuids:
                         with open(os.path.join(self.stat_folder, convert_uuid(item) + '.json')) as json_data:
                             stats = json.load(json_data)
-
                             if stat_id in stats:
-                                text1.append(stats[stat_id])
-                                text2.append(self.cache.names[self.cache.uuids.index(item)])
                                 total += stats[stat_id]
                 except:
                     if self.bot:
