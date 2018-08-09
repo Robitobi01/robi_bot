@@ -72,9 +72,9 @@ class StatCommand(BaseCommand):
                     value = stat_value)
 
                 em.set_author(
-                    name = player_name + ' - Statistics', 
+                    name = player_name + ' - Statistics',
                     icon_url = 'https://crafatar.com/avatars/' + uuid)
-                        
+
                 await self.bot.send_message(message.channel, embed = em)
             else:
                 print('Stat = ' + stat_id + ', Value = ' + stat_value + ', ' + player_name + ' - Statistics')
@@ -133,9 +133,9 @@ class StatCommand(BaseCommand):
                         name = 'Result',
                         inline = True,
                         value = '\n'.join(str(x) for x in text1))
-                            
+
                     em.set_author(
-                        name = stat_id + ' - Ranking', 
+                        name = stat_id + ' - Ranking',
                         icon_url = 'https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
                     em.set_footer(text = 'Total: ' + str(total) + '    |    ' + str(round((total / 1000000), 2)) + ' M')
 
@@ -147,6 +147,51 @@ class StatCommand(BaseCommand):
                         print(str(item[0]) + ', ' + item[1])
 
                     print('Total: ' + str(total) + '    |    ' + str(round((total / 1000000), 2)) + ' M')
+
+        #total
+        elif len(args) == 2 and args[0] == 'total':
+            async with CommandCache.semaphore:
+                try:
+                    stat_id = 'stat.' + args[1] if not args[1].startswith('stat') else args[1]
+                    stat_id = ''.join(get_close_matches(stat_id, self.cache.stat_ids, 1))
+
+                    if stat_id == '':
+                        if self.bot:
+                            await self.bot.send_message(message.channel, 'Invalid stat')
+                        else:
+                            print('Invalid stat')
+
+                    total = 0
+
+                    for item in self.cache.uuids:
+                        with open(os.path.join(self.stat_folder, convert_uuid(item) + '.json')) as json_data:
+                            stats = json.load(json_data)
+
+                            if stat_id in stats:
+                                text1.append(stats[stat_id])
+                                text2.append(self.cache.names[self.cache.uuids.index(item)])
+                                total += stats[stat_id]
+                except:
+                    if self.bot:
+                        await self.bot.send_message(message.channel, 'No playerfile or stat found')
+                    else:
+                        print('No playerfile or stat found')
+
+                    return
+
+                em = discord.Embed(
+                    description = '',
+                    colour = 0x003763)
+                em.add_field(
+                    name = 'Result',
+                    inline = True,
+                    value = 'Total: ' + str(total) + '    |    ' + str(round((total / 1000000), 2)) + ' M')
+
+                em.set_author(
+                    name = stat_id + ' - Ranking',
+                    icon_url = 'https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
+                await self.bot.send_message(message.channel, embed = em)
+
         else:
             if self.bot:
                 await self.bot.send_message(message.channel, 'Invalid syntax')
