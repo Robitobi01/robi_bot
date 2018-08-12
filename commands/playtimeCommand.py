@@ -33,7 +33,7 @@ def formatPlaytimeForEmbed(years, days, hours, minutes):
 
     buffer = '' if years <= 0 else '{0}y '.format(years)
     
-    return buffer + '{0:0>3}.{1:0>2}:{2:0>2}'.format(days, hours, minutes)
+    return buffer + '{0:0>3} {1:0>2}:{2:0>2}'.format(days, hours, minutes)
 
 class PlayerInfo:
     """Contains playtime information about a player."""
