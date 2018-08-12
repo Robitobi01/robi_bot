@@ -148,22 +148,27 @@ class StatCommand(BaseCommand):
 
                     print('Total: ' + str(total) + '    |    ' + str(round((total / 1000000), 2)) + ' M')
 
-        #total
+        # stat total
         elif len(args) == 2 and args[0] == 'total':
             async with CommandCache.semaphore:
                 try:
                     stat_id = 'stat.' + args[1] if not args[1].startswith('stat') else args[1]
                     stat_id = ''.join(get_close_matches(stat_id, self.cache.stat_ids, 1))
+
                     if stat_id == '':
                         if self.bot:
                             await self.bot.send_message(message.channel, 'Invalid stat')
                         else:
                             print('Invalid stat')
+                    
+                        return
 
                     total = 0
+
                     for item in self.cache.uuids:
                         with open(os.path.join(self.stat_folder, convert_uuid(item) + '.json')) as json_data:
                             stats = json.load(json_data)
+                            
                             if stat_id in stats:
                                 total += stats[stat_id]
                 except:
@@ -174,6 +179,7 @@ class StatCommand(BaseCommand):
 
                     return
 
+            if self.bot:
                 em = discord.Embed(
                     description = '',
                     colour = 0x003763)
@@ -185,8 +191,11 @@ class StatCommand(BaseCommand):
                 em.set_author(
                     name = stat_id + ' - Ranking',
                     icon_url = 'https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
-                await self.bot.send_message(message.channel, embed = em)
 
+                await self.bot.send_message(message.channel, embed = em)
+            else:
+                print('Stat: ' + stat_id)
+                print('Total: ' + str(total) + '    |    ' + str(round((total / 1000000), 2)) + ' M')
         else:
             if self.bot:
                 await self.bot.send_message(message.channel, 'Invalid syntax')
