@@ -21,13 +21,13 @@ class TpsCommand(BaseCommand):
 
         for file in ['level.dat', 'level.dat_old']:
             last_played.append(nbt.NBTFile(os.path.join(self.survival_folder, file))['Data']['LastPlayed'].value)
-        
+
         tps = 45.0 / ((last_played[0] - last_played[1]) / 1000.0) * 20.0
-        
+
         if tps > 20.0: tps = 20.0
         if tps < 0.0: tps = 0.0
-        
+
         if self.bot:
-            await self.bot.send_message(message.channel, 'The Current TPS is: **' + str(round(tps, 2)) + '** | TPS only updates roughly every 45 seconds')
+            await self.bot.send_message(message.channel, 'The current TPS is: **' + str(round(tps, 2)) + '** | TPS only updates roughly every 45 seconds')
         else:
             print('The Current TPS is: **' + str(round(tps, 2)) + '** | TPS only updates roughly every 45 seconds')
