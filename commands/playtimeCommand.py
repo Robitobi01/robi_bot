@@ -31,9 +31,9 @@ def formatPlaytimeForEmbed(years, days, hours, minutes):
     if years + days + hours + minutes == 0:
         return ''
 
-    buffer = '' if years <= 0 else '{0}y '.format(years)
+    buffer = '`   ' if years <= 0 else '`{0}y '.format(years)
     
-    return buffer + '{0:0>3} {1:0>2}:{2:0>2}'.format(days, hours, minutes)
+    return buffer + '{0:>3} {1:0>2}:{2:0>2}`'.format(days, hours, minutes)
 
 class PlayerInfo:
     """Contains playtime information about a player."""
@@ -133,7 +133,7 @@ class PlaytimeCommand(BaseCommand):
                     print('Player: Playtime')
 
                     for p in players:
-                        print(p.player_name + ': ' + formatPlaytimeForEmbed(p.years, p.days, p.hours, p.minutes))
+                        print('{0:<20}: {1}'.format(p.player_name, formatPlaytimeForEmbed(p.years, p.days, p.hours, p.minutes)))
 
                     if len(players) > 1:
                         print('Total: {0}'.format(formatPlaytimeForEmbed(total_info.years, total_info.days, total_info.hours, total_info.minutes)))
