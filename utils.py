@@ -11,6 +11,12 @@ def convert_uuid(uuid):
     else:
         return uuid[:8] + '-' + uuid[8:12] + '-' + uuid[12:16] + '-' + uuid[16:20] + '-' + uuid[20:]
 
+# The only markdown special character allowed in Minecraft username is '_'
+# Discord does not allow using a backslash at the beginning to stop markdown if the value has an 
+#     underscore, so you have to escape the individual underscores.
+def formatNameForEmbed(name):
+    return name.replace('_', '\\_')
+
 #returns the total size of all files in given location
 def get_size(start_path):
     total_size = 0

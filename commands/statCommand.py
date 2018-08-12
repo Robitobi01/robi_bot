@@ -102,7 +102,7 @@ class StatCommand(BaseCommand):
 
                             if stat_id in stats:
                                 text1.append(stats[stat_id])
-                                text2.append(self.cache.names[self.cache.uuids.index(item)])
+                                text2.append(formatNameForEmbed(self.cache.names[self.cache.uuids.index(item)]))
                                 total += stats[stat_id]
                 except:
                     if self.bot:

@@ -27,10 +27,6 @@ def minutesOfHour(minutes):
 def daysOfYear(days):
     return days % 365
 
-def formatNameForEmbed(name):
-    # The only markdown special character allowed in Minecraft username is '_'
-    return name.replace('_', '\\_')
-
 def formatPlaytimeForEmbed(years, days, hours, minutes):
     if years + days + hours + minutes == 0:
         return ''

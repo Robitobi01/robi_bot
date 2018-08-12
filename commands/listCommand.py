@@ -88,7 +88,7 @@ class ListCommand(BaseCommand):
                     x, y, z = (int(i.value) for i in nbt_file['Pos'])
                     known_location = first(ListCommand.known_locations[dimension], lambda i: i.is_contained(x, z))
 
-                    text1.append('**' + item + '** (' + ListCommand.dimensions.get(dimension, '?') + ('' if known_location == None else '@*' + known_location.location_name + '*') + ')')
+                    text1.append('**' + formatNameForEmbed(item) + '** (' + ListCommand.dimensions.get(dimension, '?') + ('' if known_location == None else '@*' + known_location.location_name + '*') + ')')
                 
             if self.bot:
                 await self.bot.send_message(message.channel, 'Players: ' + ', '.join(text1))

@@ -154,7 +154,7 @@ class BenchmarkCommand(BaseCommand):
                 delta = item.calc_delta()
 
                 if delta > 0:
-                    text1.append(item.name)
+                    text1.append(formatNameForEmbed(item.name))
                     text2.append(str(delta))
                     text3.append(str(item.calc_rate_per_hour()))
 
@@ -202,7 +202,7 @@ class BenchmarkCommand(BaseCommand):
             text2 = []
 
             for k, v in self.benchmarks.items():
-                text1.append(k)
+                text1.append(formatNameForEmbed(k))
                 text2.append(str(datetime.timedelta(seconds = round(v.elapsed_time(current_time), 0))))
 
             if text1 == []:

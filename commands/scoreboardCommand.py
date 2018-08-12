@@ -41,7 +41,7 @@ class ScoreboardCommand(BaseCommand):
 
                 for name, amount in scoreboard:
                     if not name == 'Total':
-                        text1.append(name)
+                        text1.append(formatNameForEmbed(name))
                         text2.append(str(amount))
                         total += amount
 
