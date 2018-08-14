@@ -18,8 +18,9 @@ class StatCommand(BaseCommand):
         self.stat_folder = stat_folder
 
     def help(self):
-        return ('`' + self.command_text + ' player <user_name> <stat_name>`  **-**  Shows statistics value\n'
-                '`' + self.command_text + ' list <stat_name>`  **-**  Shows statistics ranking\n')
+        return ('`' + self.command_text + ' player <user_name> <stat_name>`  **-**  Shows player statistic value\n'
+                '`' + self.command_text + ' list <stat_name>`  **-**  Shows statistics ranking\n'
+                '`' + self.command_text + ' total <stat_name>`  **-**  Shows statistic total\n')
 
     async def process(self, message, args):
         # stat player
