@@ -30,4 +30,4 @@ class TpsCommand(BaseCommand):
         if self.bot:
             await self.bot.send_message(message.channel, 'The current TPS is: **' + str(round(tps, 2)) + '** | TPS only updates roughly every 45 seconds')
         else:
-            print('The Current TPS is: **' + str(round(tps, 2)) + '** | TPS only updates roughly every 45 seconds')
+            print('The current TPS is: **' + str(round(tps, 2)) + '** | TPS only updates roughly every 45 seconds')

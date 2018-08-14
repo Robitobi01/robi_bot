@@ -37,7 +37,7 @@ class StructureCommand(BaseCommand):
                 colour = 0x003763)
 
             em.set_author(name = 'Structure file uploaded', icon_url = 'https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
-            em.set_footer(text = 'Filesize: ' + str(round(filesize / 1000, 2)) + 'KB')
+            em.set_footer(text = 'Filesize: ' + str(round(filesize / 1024, 2)) + 'KB')
 
             await self.bot.send_message(message.channel, embed = em)
         else:
