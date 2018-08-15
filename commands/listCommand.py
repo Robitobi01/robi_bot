@@ -72,30 +72,36 @@ class ListCommand(BaseCommand):
                     ListCommand.known_locations[known_location.dimension].append(known_location)
 
     async def process(self, message, args):
-        server = MinecraftServer(self.minecraft_ip, self.minecraft_port)
-        query = server.query()
+        try:
+            server = MinecraftServer(self.minecraft_ip, self.minecraft_port)
+            query = server.query()
 
-        if query.players.online > 0:
-            online_list = query.players.names
-            text1 = []
+            if query.players.online > 0:
+                online_list = query.players.names
+                text1 = []
 
-            async with CommandCache.semaphore:
-                for item in online_list:
-                    nbt_file = nbt.NBTFile(os.path.join(self.playerdata_folder, convert_uuid(self.cache.uuids[self.cache.names.index(item)]) + '.dat'))
-                    #nbt_file = nbt.NBTFile(os.path.join(self.playerdata_folder, '33804744-b7a3-4816-8ddc-02ac2d8c80cf.dat'))
+                async with CommandCache.semaphore:
+                    for item in online_list:
+                        nbt_file = nbt.NBTFile(os.path.join(self.playerdata_folder, convert_uuid(self.cache.uuids[self.cache.names.index(item)]) + '.dat'))
+                        #nbt_file = nbt.NBTFile(os.path.join(self.playerdata_folder, '33804744-b7a3-4816-8ddc-02ac2d8c80cf.dat'))
 
-                    dimension = nbt_file['Dimension'].value
-                    x, y, z = (int(i.value) for i in nbt_file['Pos'])
-                    known_location = first(ListCommand.known_locations[dimension], lambda i: i.is_contained(x, z))
+                        dimension = nbt_file['Dimension'].value
+                        x, y, z = (int(i.value) for i in nbt_file['Pos'])
+                        known_location = first(ListCommand.known_locations[dimension], lambda i: i.is_contained(x, z))
 
-                    text1.append('**' + formatNameForEmbed(item) + '** (' + ListCommand.dimensions.get(dimension, '?') + ('' if known_location == None else '@*' + known_location.location_name + '*') + ')')
-                
-            if self.bot:
-                await self.bot.send_message(message.channel, 'Players: ' + ', '.join(text1))
+                        text1.append('**' + formatNameForEmbed(item) + '** (' + ListCommand.dimensions.get(dimension, '?') + ('' if known_location == None else '@*' + known_location.location_name + '*') + ')')
+
+                if self.bot:
+                    await self.bot.send_message(message.channel, 'Players: ' + ', '.join(text1))
+                else:
+                    print('Players: ' + ', '.join(text1))
             else:
-                print('Players: ' + ', '.join(text1))
-        else:
+                if self.bot:
+                    await self.bot.send_message(message.channel, 'No Player is currently online')
+                else:
+                    print('No Player is currently online')
+        except:
             if self.bot:
-                await self.bot.send_message(message.channel, 'No Player is currently online')
+                await self.bot.send_message(message.channel, 'An error occured while trying to reach the server')
             else:
-                print('No Player is currently online')
+                print('An error occured while trying to reach the server')

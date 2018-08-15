@@ -27,7 +27,9 @@ class StatusCommand(BaseCommand):
                 if value == 'yellow': value = ':warning:'
                 if value == 'red': value = ':x:'
                 status[key] = value
-        em = generate_embed_table(list(status.keys()), list(status.values()))
+        em = generate_embed_table(
+        list(status.keys()),
+        list(status.values()))
         em.set_author(
             name = 'Mojang Status',
             icon_url = 'https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')

@@ -1,7 +1,5 @@
 from commands import *
-
 from discord.ext.commands import Bot
-
 import discord
 import os
 
@@ -56,9 +54,9 @@ commands[worldsizeCommand.WorldsizeCommand.command_text] = worldsizeCommand.Worl
 async def on_ready():
     await bot.change_presence(game = discord.Game(name = '!!help'))
 
+    # on_ready can be called more than once so only run !!reload if this is the first time.
     if 'initialized' not in locals():
         initialized = True
-        # on_ready can be called more than once so only run !!reload if this is the first time.
         await commands[reloadCommand.ReloadCommand.command_text].process(None, None, force_reload = True)
 
     print("Bot is connected")
@@ -70,7 +68,6 @@ async def on_message(message):
     if args != []:
         command_text = args[0]
         args = args[1:]
-
         if command_text in commands:
             await commands[command_text].process(message, args)
 

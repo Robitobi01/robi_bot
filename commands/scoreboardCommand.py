@@ -36,7 +36,7 @@ class ScoreboardCommand(BaseCommand):
                 return
 
             scoreboard = dict()
-                
+
             for tag in nbt_file['data']['PlayerScores']:
                 if tag['Objective'].value.casefold() == objective_name:
                     scoreboard[tag['Name'].value] = tag['Score'].value
@@ -54,19 +54,12 @@ class ScoreboardCommand(BaseCommand):
                     total += amount
 
             if self.bot:
-                em = discord.Embed(
-                    description = '',
-                    colour = 0x003763)
-
-                em.add_field(name = 'Players',
-                    inline = True,
-                    value = '\n'.join(text1))
-                em.add_field(name = 'Amount',
-                    inline = True,
-                    value = '\n'.join(text2))
-
+                em = generate_embed_table(
+                ['Players', 'Amount'],
+                ['\n'.join(text1), '\n'.join(text2)],
+                True)
                 em.set_author(
-                    name = 'Scoreboard: ' + objective_name, 
+                    name = 'Scoreboard: ' + objective_name,
                     icon_url = 'https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
                 em.set_footer(text = 'Total: ' + str(total) + '    |    ' + str(round(total / 1000000, 2)) + ' M')
 
@@ -87,12 +80,12 @@ class ScoreboardCommand(BaseCommand):
                 if self.bot:
                     await self.bot.send_message(message.channel, 'Scoreboard not found')
                 else:
-                    print('Scoreboard not found') 
-                
+                    print('Scoreboard not found')
+
                 return
-                
+
             total = 0
-                
+
             for tag in nbt_file['data']['PlayerScores']:
                 if tag['Objective'].value.casefold() == objective_name:
                     total += tag['Score'].value
@@ -105,12 +98,11 @@ class ScoreboardCommand(BaseCommand):
                     name = 'Total',
                     inline = True,
                     value = '`' + str(total) + '    |    ' + str(round(total / 1000000, 2)) + ' M`')
-
                 em.set_author(
-                    name = 'Scoreboard: ' + objective_name, 
+                    name = 'Scoreboard: ' + objective_name,
                     icon_url = 'https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
-
                 await self.bot.send_message(message.channel, embed = em)
+
             else:
                 print('Scoreboard: ' + objective_name)
                 print('Total: ' + str(total) + '    |    ' + str(round(total / 1000000, 2)) + ' M')

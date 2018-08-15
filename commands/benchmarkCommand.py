@@ -1,11 +1,8 @@
 from .baseCommand import BaseCommand
 from .commandCache import CommandCache
-
 from utils import *
-
 from difflib import get_close_matches
 from nbt import nbt
-
 import datetime
 import discord
 import os
@@ -48,7 +45,6 @@ class BenchmarkCommand(BaseCommand):
         super().__init__(bot, command_cache)
 
         self.stat_folder = stat_folder
-
         self.benchmarks = dict()
 
     def help(self):
@@ -160,23 +156,10 @@ class BenchmarkCommand(BaseCommand):
 
             if text1 != []:
                 if self.bot:
-                    em = discord.Embed(
-                        description = '',
-                        colour = 0x003763)
-
-                    em.add_field(
-                        name = 'Player',
-                        inline = True,
-                        value = '\n'.join(text1))
-                    em.add_field(
-                        name = 'Delta',
-                        inline = True,
-                        value = '\n'.join(text2))
-                    em.add_field(
-                        name = 'Per Hour',
-                        inline = True,
-                        value = '\n'.join(text3))
-
+                    em = generate_embed_table(
+                    ['Player', 'Delta', 'Per Hour'],
+                    ['\n'.join(text1), '\n'.join(text2), '\n'.join(text3)],
+                    True)
                     em.set_author(name = 'Benchmark', icon_url = 'https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
                     em.set_footer(text = 'Total Time: ' + str(datetime.timedelta(seconds = round(benchmark.elapsed_time(),0))))
 
@@ -186,13 +169,14 @@ class BenchmarkCommand(BaseCommand):
 
                     for item in zip(text1, text2, text3):
                         print(item[0] + ', ' + item[1] + ', ' + item[2])
+                        
             else:
                 if self.bot:
                     await self.bot.send_message(message.channel, 'No changes detected, stop being lazy!')
                 else:
                     print('No changes detected, stop being lazy!')
 
-            # Results have been successfully reported so remove it from the list.
+            # results have been successfully reported so remove it from the list
             del self.benchmarks[stat_id]
         # list
         elif len(args) == 1 and args[0] == 'list':
@@ -210,30 +194,21 @@ class BenchmarkCommand(BaseCommand):
                     await self.bot.send_message(message.channel, 'No benchmarks currently running')
                 else:
                     print('No benchmarks currently running')
+
             else:
                 if self.bot:
-                    em = discord.Embed(
-                        description = '',
-                        colour = 0x003763)
-
-                    em.add_field(
-                        name = 'Player',
-                        inline = True,
-                        value = '\n'.join(text1))
-                    em.add_field(
-                        name = 'Running Time',
-                        inline = True,
-                        value = '\n'.join(text2))
-
+                    em = generate_embed_table(
+                    ['Player', 'Running Time'],
+                    ['\n'.join(text1), '\n'.join(text2)],
+                    True)
                     em.set_author(name = 'Benchmark List', icon_url = 'https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
                     em.set_footer(text = 'Active: ' + str(len(self.benchmarks.keys())))
-
                     await self.bot.send_message(message.channel, embed = em)
                 else:
                     print('Stat, Running Time')
-
                     for item in zip(text1, text2):
                         print(item[0] + ', ' + item[1])
+
         else:
             if self.bot:
                 await self.bot.send_message(message.channel, 'Invalid syntax')

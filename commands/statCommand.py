@@ -59,24 +59,15 @@ class StatCommand(BaseCommand):
                     print('No playerfile or stat found')
 
             if self.bot:
-                em = discord.Embed(
-                    description = '',
-                    colour = 0x003763)
-
-                em.add_field(
-                    name = 'Stat',
-                    inline = True,
-                    value = stat_id)
-                em.add_field(
-                    name = 'Result',
-                    inline = True,
-                    value = stat_value)
-
+                em = generate_embed_table(
+                ['Stat', 'Result'],
+                [stat_id, stat_value],
+                True)
                 em.set_author(
                     name = player_name + ' - Statistics',
                     icon_url = 'https://crafatar.com/avatars/' + uuid)
-
                 await self.bot.send_message(message.channel, embed = em)
+
             else:
                 print('Stat = ' + stat_id + ', Value = ' + stat_value + ', ' + player_name + ' - Statistics')
 
@@ -122,28 +113,18 @@ class StatCommand(BaseCommand):
                 if self.bot:
                     text1, text2 = zip(*sorted(zip(text1, text2), reverse = True))
 
-                    em = discord.Embed(
-                        description = '',
-                        colour = 0x003763)
-
-                    em.add_field(
-                        name = 'Players',
-                        inline = True,
-                        value = '\n'.join(text2))
-                    em.add_field(
-                        name = 'Result',
-                        inline = True,
-                        value = '\n'.join(str(x) for x in text1))
-
+                    em = generate_embed_table(
+                    ['Players', 'Result'],
+                    ['\n'.join(text2), '\n'.join(str(x) for x in text1)],
+                    True)
                     em.set_author(
                         name = stat_id + ' - Ranking',
                         icon_url = 'https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
                     em.set_footer(text = 'Total: ' + str(total) + '    |    ' + str(round((total / 1000000), 2)) + ' M')
-
                     await self.bot.send_message(message.channel, embed = em)
+
                 else:
                     print(stat_id + ' Ranking')
-
                     for item in sorted(zip(text1, text2), reverse = True):
                         print(str(item[0]) + ', ' + item[1])
 
@@ -161,7 +142,7 @@ class StatCommand(BaseCommand):
                             await self.bot.send_message(message.channel, 'Invalid stat')
                         else:
                             print('Invalid stat')
-                    
+
                         return
 
                     total = 0
@@ -169,7 +150,7 @@ class StatCommand(BaseCommand):
                     for item in self.cache.uuids:
                         with open(os.path.join(self.stat_folder, convert_uuid(item) + '.json')) as json_data:
                             stats = json.load(json_data)
-                            
+
                             if stat_id in stats:
                                 total += stats[stat_id]
                 except:
@@ -190,7 +171,7 @@ class StatCommand(BaseCommand):
                     value = 'Total: ' + str(total) + '    |    ' + str(round((total / 1000000), 2)) + ' M')
 
                 em.set_author(
-                    name = stat_id + ' - Ranking',
+                    name = stat_id + ' - Total',
                     icon_url = 'https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
 
                 await self.bot.send_message(message.channel, embed = em)

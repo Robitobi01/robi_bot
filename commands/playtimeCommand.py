@@ -32,7 +32,7 @@ def formatPlaytimeForEmbed(years, days, hours, minutes):
         return ''
 
     buffer = '`   ' if years <= 0 else '`{0}y '.format(years)
-    
+
     return buffer + '{0:>3} {1:0>2}:{2:0>2}`'.format(days, hours, minutes)
 
 class PlayerInfo:
@@ -99,7 +99,7 @@ class PlaytimeCommand(BaseCommand):
                 else:
                     print('No playerfile or stat found')
             else:
-                # Sort players in descending order based on total playtime in minutes.
+                # sort players in descending order based on total playtime in minutes
                 players = sorted(players, key = lambda p: p.played_minutes, reverse = True)
 
                 total_info = PlayerInfo('', '')
@@ -108,30 +108,21 @@ class PlaytimeCommand(BaseCommand):
                 if self.bot:
                     player_names, playtimes = zip(*list((formatNameForEmbed(p.player_name), formatPlaytimeForEmbed(p.years, p.days, p.hours, p.minutes)) for p in players))
 
-                    em = discord.Embed(
-                        description = '',
-                        colour = 0x003763)
-
-                    em.add_field(
-                        name = 'Player',
-                        inline = True,
-                        value = '\n'.join(player_names))
-                    em.add_field(
-                        name = 'Playtime',
-                        inline = True,
-                        value = '\n'.join(playtimes))
-                    
+                    em = generate_embed_table(
+                    ['Player', 'Playtime'],
+                    ['\n'.join(player_names), '\n'.join(playtimes)],
+                    True)
                     em.set_author(
-                        name = 'Total Playtime', 
+                        name = 'Total Playtime',
                         icon_url = 'https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
 
                     if len(players) > 1:
                         em.set_footer(text = 'Total: {0}'.format(formatPlaytimeForEmbed(total_info.years, total_info.days, total_info.hours, total_info.minutes)))
 
                     await self.bot.send_message(message.channel, embed = em)
+
                 else:
                     print('Player: Playtime')
-
                     for p in players:
                         print('{0:<20}: {1}'.format(p.player_name, formatPlaytimeForEmbed(p.years, p.days, p.hours, p.minutes)))
 
@@ -160,16 +151,16 @@ class PlaytimeCommand(BaseCommand):
                 else:
                     print('No playerfile or stat found')
         elif len(args) == 1 and args[0] == 'server':
-            # Process server times
+            # process server times
             try:
                 nbt_data = nbt.NBTFile(os.path.join(self.survival_folder, 'level.dat'))['Data']
-                
+
                 text_names = []
                 text_times = []
 
                 data_time = nbt_data['Time'].value
                 data_daytime = nbt_data['DayTime'].value
-                
+
                 # Total Time IRL
                 text_names.append('Total Time (IRL)')
 
@@ -195,13 +186,13 @@ class PlaytimeCommand(BaseCommand):
                 minutes = 0
 
                 text_times.append(formatPlaytimeForEmbed(years, days, hours, minutes))
-                
+
                 # World Time IRL
                 text_names.append('World Time (IRL)')
-                
+
                 world_minutes = ticksToMinutes(data_daytime)
                 world_days = minutesToDays(world_minutes)
-                
+
                 years = daysToYears(world_days)
                 days = daysOfYear(world_days)
                 hours = minutesToHours(world_minutes)
@@ -229,32 +220,23 @@ class PlaytimeCommand(BaseCommand):
                 return
 
             if self.bot:
-                em = discord.Embed(
-                    description = '',
-                    colour = 0x003763)
-                
-                em.add_field(
-                    name = 'Name',
-                    inline = True,
-                    value = '\n'.join(text_names))
-                em.add_field(
-                    name = 'Time',
-                    inline = True,
-                    value = '\n'.join(text_times))
-                
+                em = generate_embed_table(
+                ['Name', 'Time'],
+                ['\n'.join(text_names), '\n'.join(text_times)],
+                True)
                 em.set_author(
-                    name = 'Server Times', 
+                    name = 'Server Times',
                     icon_url = 'https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
                 em.set_footer(text = 'World Time is used for daylight cycle.')
-
                 await self.bot.send_message(message.channel, embed = em)
+
             else:
                 print('Name: Time')
-                
                 for item in zip(text_names, text_times):
                     print(item[0] + ': ' + item[1])
+
         elif len(args) >= 1:
-            # Process args as player names
+            # process args as player names
             try:
                 players = []
 
