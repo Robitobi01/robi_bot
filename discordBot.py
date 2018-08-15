@@ -70,5 +70,7 @@ async def on_message(message):
         args = args[1:]
         if command_text in commands:
             await commands[command_text].process(message, args)
-
-bot.run(token)
+try:
+    bot.run(token)
+except:
+    print('A connection error occured')
