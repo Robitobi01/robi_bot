@@ -27,13 +27,27 @@ def minutesOfHour(minutes):
 def daysOfYear(days):
     return days % 365
 
-def formatPlaytimeForEmbed(years, days, hours, minutes):
+def formatPlaytimeForTotal(years, days, hours, minutes):
     if years + days + hours + minutes == 0:
         return ''
 
-    buffer = '`   ' if years <= 0 else '`{0}y '.format(years)
+    buffer = '' if years <= 0 else '{0}y '.format(years)
 
-    return buffer + '{0:>3} {1:0>2}:{2:0>2}`'.format(days, hours, minutes)
+    return buffer + '{0:0>3} {1:0>2}:{2:0>2}'.format(days, hours, minutes)
+
+def formatPlaytimeForEmbed(years, days, hours, minutes, use_code_block = True):
+    if years + days + hours + minutes == 0:
+        buffer = ''
+    else:
+        buffer = '{0:0>3} {1:0>2}:{2:0>2}'.format(days, hours, minutes)
+
+        if years > 0:
+            buffer += ' {0}y'.format(years)
+
+    if use_code_block:
+        buffer = '`' + buffer + '`'
+
+    return buffer
 
 class PlayerInfo:
     """Contains playtime information about a player."""
@@ -109,25 +123,24 @@ class PlaytimeCommand(BaseCommand):
                     player_names, playtimes = zip(*list((formatNameForEmbed(p.player_name), formatPlaytimeForEmbed(p.years, p.days, p.hours, p.minutes)) for p in players))
 
                     em = generate_embed_table(
-                    ['Player', 'Playtime'],
-                    ['\n'.join(player_names), '\n'.join(playtimes)],
-                    True)
+                        ['Player', 'Playtime'],
+                        ['\n'.join(player_names), '\n'.join(playtimes)],
+                        True)
                     em.set_author(
                         name = 'Total Playtime',
                         icon_url = 'https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
 
                     if len(players) > 1:
-                        em.set_footer(text = 'Total: {0}'.format(formatPlaytimeForEmbed(total_info.years, total_info.days, total_info.hours, total_info.minutes)))
+                        em.set_footer(text = 'Total: {0}'.format(formatPlaytimeForTotal(total_info.years, total_info.days, total_info.hours, total_info.minutes)))
 
                     await self.bot.send_message(message.channel, embed = em)
-
                 else:
                     print('Player: Playtime')
                     for p in players:
-                        print('{0:<20}: {1}'.format(p.player_name, formatPlaytimeForEmbed(p.years, p.days, p.hours, p.minutes)))
+                        print('{0:<20}: {1}'.format(p.player_name, formatPlaytimeForEmbed(p.years, p.days, p.hours, p.minutes, False)))
 
                     if len(players) > 1:
-                        print('Total: {0}'.format(formatPlaytimeForEmbed(total_info.years, total_info.days, total_info.hours, total_info.minutes)))
+                        print('Total: {0}'.format(formatPlaytimeForTotal(total_info.years, total_info.days, total_info.hours, total_info.minutes)))
         except:
             if self.bot:
                 await self.bot.send_message(message.channel, 'No playerfile or stat found')
@@ -136,7 +149,7 @@ class PlaytimeCommand(BaseCommand):
 
     async def process(self, message, args):
         if len(args) == 0:
-            # Process all players
+            # process all players
             try:
                 players = []
 
@@ -172,7 +185,7 @@ class PlaytimeCommand(BaseCommand):
                 hours = minutesToHours(total_minutes)
                 minutes = minutesOfHour(total_minutes)
 
-                text_times.append(formatPlaytimeForEmbed(years, days, hours, minutes))
+                text_times.append(formatPlaytimeForTotal(years, days, hours, minutes))
 
                 # Total Time In-Game
                 text_names.append('Total Time (IG)')
@@ -185,7 +198,7 @@ class PlaytimeCommand(BaseCommand):
                 hours = data_time % 24000 // 1000 # 1 hour in-game is 1000 ticks
                 minutes = 0
 
-                text_times.append(formatPlaytimeForEmbed(years, days, hours, minutes))
+                text_times.append(formatPlaytimeForTotal(years, days, hours, minutes))
 
                 # World Time IRL
                 text_names.append('World Time (IRL)')
@@ -198,7 +211,7 @@ class PlaytimeCommand(BaseCommand):
                 hours = minutesToHours(world_minutes)
                 minutes = minutesOfHour(world_minutes)
 
-                text_times.append(formatPlaytimeForEmbed(years, days, hours, minutes))
+                text_times.append(formatPlaytimeForTotal(years, days, hours, minutes))
 
                 # World Time In-Game
                 text_names.append('World Time (IG)')
@@ -210,7 +223,7 @@ class PlaytimeCommand(BaseCommand):
                 hours = data_daytime % 24000 // 1000 # 1 hour in-game is 1000 ticks
                 minutes = 0
 
-                text_times.append(formatPlaytimeForEmbed(years, days, hours, minutes))
+                text_times.append(formatPlaytimeForTotal(years, days, hours, minutes))
             except:
                 if self.bot:
                     await self.bot.send_message(message.channel, 'No level data found')
@@ -221,17 +234,18 @@ class PlaytimeCommand(BaseCommand):
 
             if self.bot:
                 em = generate_embed_table(
-                ['Name', 'Time'],
-                ['\n'.join(text_names), '\n'.join(text_times)],
-                True)
+                    ['Name', 'Time'],
+                    ['\n'.join(text_names), '\n'.join(text_times)],
+                    True)
                 em.set_author(
                     name = 'Server Times',
                     icon_url = 'https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
                 em.set_footer(text = 'World Time is used for daylight cycle.')
-                await self.bot.send_message(message.channel, embed = em)
 
+                await self.bot.send_message(message.channel, embed = em)
             else:
                 print('Name: Time')
+
                 for item in zip(text_names, text_times):
                     print(item[0] + ': ' + item[1])
 
