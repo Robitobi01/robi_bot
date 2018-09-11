@@ -37,6 +37,7 @@ command_cache = commandCache.CommandCache(STAT_FOLDER, True)
 
 commands = dict()
 commands[benchmarkCommand.BenchmarkCommand.command_text] = benchmarkCommand.BenchmarkCommand(bot, command_cache, STAT_FOLDER)
+commands[deleteCommand.DeleteCommand.command_text] = deleteCommand.DeleteCommand(bot, command_cache)
 commands[hardwareCommand.HardwareCommand.command_text] = hardwareCommand.HardwareCommand(bot, command_cache)
 commands[helpCommand.HelpCommand.command_text] = helpCommand.HelpCommand(bot, command_cache, commands)
 commands[listCommand.ListCommand.command_text] = listCommand.ListCommand(bot, command_cache, minecraft_ip, minecraft_port, FOLDER, PLAYERDATA_FOLDER)
