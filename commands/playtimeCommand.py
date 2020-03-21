@@ -35,7 +35,7 @@ def formatPlaytimeForTotal(years, days, hours, minutes):
 
     return buffer + '{0:0>3} {1:0>2}:{2:0>2}'.format(days, hours, minutes)
 
-def formatPlaytimeForEmbed(years, days, hours, minutes, use_code_block = True):
+def formatPlaytimeForEmbed(years, days, hours, minutes, use_code_block = False):
     if years + days + hours + minutes == 0:
         buffer = ''
     else:
