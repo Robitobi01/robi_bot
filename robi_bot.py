@@ -6,8 +6,7 @@ from commands import *
 client = discord.Client()
 
 # Directories
-#FOLDER = os.path.dirname(__file__)
-FOLDER = '/home/robi/Desktop/code/robi_bot/servers/'
+FOLDER = os.path.dirname(__file__)
 
 CREATIVE_FOLDER = os.path.join(FOLDER, 'Creative', 'Creative')
 SURVIVAL_FOLDER = os.path.join(FOLDER, 'Survival', 'Survival')
