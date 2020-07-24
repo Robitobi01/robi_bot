@@ -1,25 +1,20 @@
 from .baseCommand import BaseCommand
-from .commandCache import CommandCache
-
 from utils import *
-
 from difflib import get_close_matches
 from nbt import nbt
 
-import discord
-import os
 
 class ScoreboardCommand(BaseCommand):
     command_text = "!!scoreboard"
 
-    def __init__(self, bot, command_cache, data_folder):
-        super().__init__(bot, command_cache)
+    def __init__(self, client, command_cache, data_folder):
+        super().__init__(client, command_cache)
 
         self.data_folder = data_folder
 
     def help(self):
         return ('`' + self.command_text + ' <scoreboard_name>`  **-**  Shows scoreboard ranking\n'
-                '`' + self.command_text + ' total <scoreboard_name>`  **-**  Shows scoreboard total\n')
+                                          '`' + self.command_text + ' total <scoreboard_name>`  **-**  Shows scoreboard total\n')
 
     async def process(self, message, args):
         if len(args) == 1:
@@ -28,8 +23,8 @@ class ScoreboardCommand(BaseCommand):
             objective_name = ''.join(get_close_matches(args[0], scoreboard_objectives, 1))
 
             if objective_name == '':
-                if self.bot:
-                    await self.bot.send_message(message.channel, 'Scoreboard not found')
+                if self.client:
+                    await message.channel.send('Scoreboard not found')
                 else:
                     print('Scoreboard not found')
 
@@ -41,7 +36,7 @@ class ScoreboardCommand(BaseCommand):
                 if tag['Objective'].value.casefold() == objective_name:
                     scoreboard[tag['Name'].value] = tag['Score'].value
 
-            scoreboard = sorted(scoreboard.items(), key = lambda x:x[1], reverse = True)
+            scoreboard = sorted(scoreboard.items(), key=lambda x: x[1], reverse=True)
 
             text1 = []
             text2 = []
@@ -49,21 +44,21 @@ class ScoreboardCommand(BaseCommand):
 
             for name, amount in scoreboard:
                 if not name == 'Total':
-                    text1.append(formatNameForEmbed(name))
+                    text1.append(format_name_for_embed(name))
                     text2.append(str(amount))
                     total += amount
 
-            if self.bot:
+            if self.client:
                 em = generate_embed_table(
-                ['Players', 'Amount'],
-                ['\n'.join(text1), '\n'.join(text2)],
-                True)
+                    ['Players', 'Amount'],
+                    ['\n'.join(text1), '\n'.join(text2)],
+                    True)
                 em.set_author(
-                    name = 'Scoreboard: ' + objective_name,
-                    icon_url = 'https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
-                em.set_footer(text = 'Total: ' + str(total) + '    |    ' + str(round(total / 1000000, 2)) + ' M')
+                    name='Scoreboard: ' + objective_name,
+                    icon_url='https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
+                em.set_footer(text='Total: ' + str(total) + '    |    ' + str(round(total / 1000000, 2)) + ' M')
 
-                await self.bot.send_message(message.channel, embed = em)
+                await message.channel.send(embed=em)
             else:
                 for name, amount in scoreboard:
                     print('name = ' + name + ', amount = ' + str(amount))
@@ -77,8 +72,8 @@ class ScoreboardCommand(BaseCommand):
             objective_name = ''.join(get_close_matches(args[1], scoreboard_objectives, 1))
 
             if objective_name == '':
-                if self.bot:
-                    await self.bot.send_message(message.channel, 'Scoreboard not found')
+                if self.client:
+                    await message.channel.send('Scoreboard not found')
                 else:
                     print('Scoreboard not found')
 
@@ -90,24 +85,24 @@ class ScoreboardCommand(BaseCommand):
                 if tag['Objective'].value.casefold() == objective_name:
                     total += tag['Score'].value
 
-            if self.bot:
+            if self.client:
                 em = discord.Embed(
-                    description = '',
-                    colour = 0x003763)
+                    description='',
+                    colour=0x003763)
                 em.add_field(
-                    name = 'Total',
-                    inline = True,
-                    value = '`' + str(total) + '    |    ' + str(round(total / 1000000, 2)) + ' M`')
+                    name='Total',
+                    inline=True,
+                    value='`' + str(total) + '    |    ' + str(round(total / 1000000, 2)) + ' M`')
                 em.set_author(
-                    name = 'Scoreboard: ' + objective_name,
-                    icon_url = 'https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
-                await self.bot.send_message(message.channel, embed = em)
+                    name='Scoreboard: ' + objective_name,
+                    icon_url='https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
+                await message.channel.send(embed=em)
 
             else:
                 print('Scoreboard: ' + objective_name)
                 print('Total: ' + str(total) + '    |    ' + str(round(total / 1000000, 2)) + ' M')
         else:
-            if self.bot:
-                await self.bot.send_message(message.channel, 'Invalid syntax')
+            if self.client:
+                await message.channel.send('Invalid syntax')
             else:
                 print('Invalid syntax')

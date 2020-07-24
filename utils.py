@@ -4,18 +4,21 @@ import json
 import os
 import requests
 
+
 # toggles '-' in given uuid
 def convert_uuid(uuid):
     if '-' in uuid:
-        return uuid.split('.json', 1)[0].translate({ ord(i): None for i in '-' })
+        return uuid.split('.json', 1)[0].translate({ord(i): None for i in '-'})
     else:
         return uuid[:8] + '-' + uuid[8:12] + '-' + uuid[12:16] + '-' + uuid[16:20] + '-' + uuid[20:]
+
 
 # The only markdown special character allowed in Minecraft username is '_'
 # Discord does not allow using a backslash at the beginning to stop markdown if the value has an
 #     underscore, so you have to escape the individual underscores.
-def formatNameForEmbed(name):
+def format_name_for_embed(name):
     return name.replace('_', '\\_')
+
 
 # returns the total size of all files in given location
 def get_size(start_path):
@@ -25,6 +28,7 @@ def get_size(start_path):
             fp = os.path.join(dirpath, f)
             total_size += os.path.getsize(fp)
     return total_size
+
 
 # returns all names in the namehistory of a uuid without duplicates or the current name
 def get_name_history(uuid):
@@ -40,6 +44,7 @@ def get_name_history(uuid):
                 del response[response.index(name)]
     return response
 
+
 # returns the name for a given uuid
 def get_name_from_uuid(uuid):
     try:
@@ -49,16 +54,18 @@ def get_name_from_uuid(uuid):
         response = json.loads(response.text)
         response = json.loads(base64.b64decode(response['properties'][0]['value']))
         return response['profileName']
-    except: return None
+    except:
+        return None
+
 
 # generates an embed Table from given columns and the corresponding values
-def generate_embed_table(columns, values, line = False):
+def generate_embed_table(columns, values, line=False):
     em = discord.Embed(
-        description = '',
-        colour = 0x003763)
+        description='',
+        colour=0x003763)
     for column in columns:
         em.add_field(
-            name = column,
-            inline = line,
-            value = values[columns.index(column)])
+            name=column,
+            inline=line,
+            value=values[columns.index(column)])
     return em

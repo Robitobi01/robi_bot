@@ -1,15 +1,14 @@
-from .baseCommand import BaseCommand
+import os
 
+from .baseCommand import BaseCommand
 from nbt import nbt
 
-import discord
-import os
 
 class TpsCommand(BaseCommand):
     command_text = "!!tps"
 
-    def __init__(self, bot, command_cache, survival_folder):
-        super().__init__(bot, command_cache)
+    def __init__(self, client, command_cache, survival_folder):
+        super().__init__(client, command_cache)
 
         self.survival_folder = survival_folder
 
@@ -24,10 +23,13 @@ class TpsCommand(BaseCommand):
 
         tps = 45.0 / ((last_played[0] - last_played[1]) / 1000.0) * 20.0
 
-        if tps > 20.0: tps = 20.0
-        if tps < 0.0: tps = 0.0
+        if tps > 20.0:
+            tps = 20.0
+        if tps < 0.0:
+            tps = 0.0
 
-        if self.bot:
-            await self.bot.send_message(message.channel, 'The current TPS is: **' + str(round(tps, 2)) + '** | TPS only updates roughly every 45 seconds')
+        if self.client:
+            await message.channel.send('The current TPS is: **' + str(
+                round(tps, 2)) + '** | TPS only updates roughly every 45 seconds')
         else:
             print('The current TPS is: **' + str(round(tps, 2)) + '** | TPS only updates roughly every 45 seconds')

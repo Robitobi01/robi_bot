@@ -1,11 +1,8 @@
-from utils import *
-
-from threading import Lock
-
 import asyncio
 import glob
-import json
-import os
+
+from utils import *
+
 
 # Class to get away from using global variables in commands which is a PITA with python modules
 class CommandCache(object):
@@ -27,13 +24,13 @@ class CommandCache(object):
 
         # load stat names
         with open('stat_ids.txt', 'r') as stream:
-            buffer = stream.read().translate({ ord(c): None for c in '"' })
+            buffer = stream.read().translate({ord(c): None for c in '"'})
 
         temp_stat_ids = buffer.split(',')
 
         # load discord id's with administrator permissions
         with open('admin_list.txt', 'r') as stream:
-            buffer = stream.read().translate({ ord(c): None for c in '"' }).rstrip()
+            buffer = stream.read().translate({ord(c): None for c in '"'}).rstrip()
 
         temp_admin_list = buffer.split(',')
 
@@ -57,10 +54,10 @@ class CommandCache(object):
                     value = response['properties'][0]['value']
                     textures = json.loads(base64.b64decode(value).decode('UTF-8'))
 
-                    profileName = textures['profileName']
+                    profile_name = textures['profileName']
 
-                    temp_names.append(profileName)
-                    temp_lower_names.append(profileName.casefold())
+                    temp_names.append(profile_name)
+                    temp_lower_names.append(profile_name.casefold())
                 except:
                     pass
         else:
@@ -87,3 +84,4 @@ class CommandCache(object):
             self.names = temp_names
             self.uuids = temp_uuids
             self.stat_ids = temp_stat_ids
+        print('Finished reloading!')
