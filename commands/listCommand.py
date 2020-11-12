@@ -103,8 +103,8 @@ class ListCommand(BaseCommand):
                     await message.channel.send('No Player is currently online :sob:')
                 else:
                     print('No Player is currently online')
-        except:
+        except Exception as e:
             if self.client:
-                await message.channel.send('An error occured while trying to reach the server')
+                await message.channel.send('An error occured while trying to reach the server: ' + e)
             else:
-                print('An error occured while trying to reach the server')
+                print('An error occured while trying to reach the server:' + e)
