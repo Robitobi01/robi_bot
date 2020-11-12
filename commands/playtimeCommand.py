@@ -1,8 +1,10 @@
+from difflib import get_close_matches
+
+from nbt import nbt
+
+from utils import *
 from .baseCommand import BaseCommand
 from .commandCache import CommandCache
-from utils import *
-from difflib import get_close_matches
-from nbt import nbt
 
 
 def ticks_to_minutes(ticks):
@@ -127,7 +129,8 @@ class PlaytimeCommand(BaseCommand):
 
                 if self.client:
                     player_names, playtimes = zip(*list(
-                        (format_name_for_embed(p.player_name), format_playtime_for_embed(p.years, p.days, p.hours, p.minutes))
+                        (format_name_for_embed(p.player_name),
+                         format_playtime_for_embed(p.years, p.days, p.hours, p.minutes))
                         for p in players))
 
                     em = generate_embed_table(
@@ -148,7 +151,8 @@ class PlaytimeCommand(BaseCommand):
                     print('Player: Playtime')
                     for p in players:
                         print('{0:<20}: {1}'.format(p.player_name,
-                                                    format_playtime_for_embed(p.years, p.days, p.hours, p.minutes, False)))
+                                                    format_playtime_for_embed(p.years, p.days, p.hours, p.minutes,
+                                                                              False)))
 
                     if len(players) > 1:
                         print('Total: {0}'.format(

@@ -1,5 +1,5 @@
-from .baseCommand import BaseCommand
 from utils import *
+from .baseCommand import BaseCommand
 
 
 class WorldsizeCommand(BaseCommand):
@@ -14,7 +14,7 @@ class WorldsizeCommand(BaseCommand):
         self.end_folder = end_folder
 
     def help(self):
-        return '`' + self.command_text + '`  **-**  Shows current world sizes\n'
+        return '`' + self.command_text + '`  **-**  Shows current world size\n'
 
     async def process(self, message, args):
         try:

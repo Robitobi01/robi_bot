@@ -1,8 +1,9 @@
-from .baseCommand import BaseCommand
-
-import discord
 import os
 import urllib.request
+
+import discord
+
+from .baseCommand import BaseCommand
 
 
 class StructureCommand(BaseCommand):

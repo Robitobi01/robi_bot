@@ -1,7 +1,8 @@
 import base64
-import discord
 import json
 import os
+
+import discord
 import requests
 
 

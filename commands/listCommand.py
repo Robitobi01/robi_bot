@@ -1,9 +1,10 @@
-from .baseCommand import BaseCommand
-from .commandCache import CommandCache
-from utils import *
 from json_minify import json_minify
 from mcstatus import MinecraftServer
 from nbt import nbt
+
+from utils import *
+from .baseCommand import BaseCommand
+from .commandCache import CommandCache
 
 
 def first(iterable, condition=lambda x: True):
@@ -99,7 +100,7 @@ class ListCommand(BaseCommand):
                     print('Players: ' + ', '.join(text1))
             else:
                 if self.client:
-                    await message.channel.send('No Player is currently online')
+                    await message.channel.send('No Player is currently online :sob:')
                 else:
                     print('No Player is currently online')
         except:

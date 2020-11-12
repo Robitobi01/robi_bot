@@ -1,7 +1,9 @@
-from .baseCommand import BaseCommand
-from utils import *
 from difflib import get_close_matches
+
 from nbt import nbt
+
+from utils import *
+from .baseCommand import BaseCommand
 
 
 class ScoreboardCommand(BaseCommand):

@@ -1,9 +1,10 @@
 import copy
 
+from nbt import nbt
+
+from utils import *
 from .baseCommand import BaseCommand
 from .commandCache import CommandCache
-from utils import *
-from nbt import nbt
 
 
 class SynchronizeCommand(BaseCommand):

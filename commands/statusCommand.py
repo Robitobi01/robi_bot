@@ -1,7 +1,7 @@
 import urllib.request
 
-from .baseCommand import BaseCommand
 from utils import *
+from .baseCommand import BaseCommand
 
 
 class StatusCommand(BaseCommand):

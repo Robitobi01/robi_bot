@@ -1,5 +1,6 @@
-import discord
 import os
+
+import discord
 
 from commands import *
 
@@ -29,11 +30,11 @@ if not os.path.exists(STRUCTURE_FOLDER):
 # External stored data hidden from code
 with open('minecraft_server.txt', 'r') as f:
     minecraft_ip, minecraft_port = f.read().split(':', 1)
+    print(minecraft_port)
     minecraft_port = int(minecraft_port)
 
 with open('token.txt', 'r') as f:
     token = f.read()
-
 
 command_cache = commandCache.CommandCache(STAT_FOLDER, True)
 
@@ -55,16 +56,18 @@ commands[worldsizeCommand.WorldsizeCommand.command_text] = worldsizeCommand.Worl
 
 initialized = False
 
+
 @client.event
 async def on_ready():
-    await client.change_presence(status=discord.Status.online, activity=discord.Game(name='!!help', type=discord.ActivityType.listening))
+    await client.change_presence(status=discord.Status.online,
+                                 activity=discord.Game(name='!!help', type=discord.ActivityType.listening))
     global initialized
     # on_ready can be called more than once so only run !!reload if this is the first time.
     if not initialized:
         print('reloading')
         initialized = True
         await commands[reloadCommand.ReloadCommand.command_text].process(None, None, force_reload=True)
-    print('robi_bot is connected with ' + client.user.name)
+        print('robi_bot is connected with ' + client.user.name)
 
 
 @client.event
@@ -81,4 +84,4 @@ async def on_message(message):
 try:
     client.run(token)
 except:
-   print('A connection error occured')
+    print('A connection error occured')

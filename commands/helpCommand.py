@@ -2,6 +2,7 @@ import discord
 
 from .baseCommand import BaseCommand
 
+
 class HelpCommand(BaseCommand):
     command_text = "!!help"
 
@@ -37,7 +38,7 @@ class HelpCommand(BaseCommand):
                 colour=0x003763)
             em.add_field(name='Commands - Page: ' + str(args) + ' / ' + str(
                 int(len(all_help_texts) / 7) + (len(all_help_texts) % 7 > 0)), inline=False, value=help_text)
-            em.set_author(name='Help', url='https://github.com/Robitobi01/Discord-Bot',
+            em.set_author(name='Help', url='https://github.com/Robitobi01/robi_bot',
                           icon_url='https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
             em.set_footer(text='Made by Robitobi01 and veirden',
                           icon_url='https://cdn.discordapp.com/avatars/400833990359253002/74b8b6de441bce1a59f9c4ac74f666e6.png')

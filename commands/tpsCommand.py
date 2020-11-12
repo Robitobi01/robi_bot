@@ -1,7 +1,8 @@
 import os
 
-from .baseCommand import BaseCommand
 from nbt import nbt
+
+from .baseCommand import BaseCommand
 
 
 class TpsCommand(BaseCommand):

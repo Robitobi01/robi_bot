@@ -1,7 +1,8 @@
+from difflib import get_close_matches
+
+from utils import *
 from .baseCommand import BaseCommand
 from .commandCache import CommandCache
-from utils import *
-from difflib import get_close_matches
 
 
 class StatCommand(BaseCommand):
