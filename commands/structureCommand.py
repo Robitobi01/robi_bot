@@ -40,7 +40,7 @@ class StructureCommand(BaseCommand):
                     colour=0x003763)
 
                 em.set_author(name='Structure file uploaded',
-                              icon_url='https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
+                              icon_url='https://redirect.dugged.net:8443/logo_full.png')
                 em.set_footer(text='Filesize: ' + str(round(filesize / 1024, 2)) + 'KB')
 
                 await message.channel.send(embed=em)

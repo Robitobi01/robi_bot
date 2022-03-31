@@ -32,7 +32,7 @@ class WorldsizeCommand(BaseCommand):
                          end_size) + ' **GB'],
                     True)
                 em.set_author(name='World Size:',
-                              icon_url='https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
+                              icon_url='https://redirect.dugged.net:8443/logo_full.png')
                 em.set_footer(text='Total World Size: ' + str(total_size) + 'GB')
                 await message.channel.send(embed=em)
 

@@ -108,14 +108,15 @@ class StatCommand(BaseCommand):
             else:
                 if self.client:
                     text1, text2 = zip(*sorted(zip(text1, text2), reverse=True))
-
+                    shortened_lists = shorten_embed_lists([text2, [str(x) for x in text1]], 2)
+                    player_names, results = shortened_lists[0], shortened_lists[1]
                     em = generate_embed_table(
                         ['Players', 'Result'],
-                        ['\n'.join(text2), '\n'.join(str(x) for x in text1)],
+                        ['\n'.join(player_names), '\n'.join(results)],
                         True)
                     em.set_author(
                         name=stat_id + ' - Ranking',
-                        icon_url='https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
+                        icon_url='https://redirect.dugged.net:8443/logo_full.png')
                     em.set_footer(text='Total: ' + str(total) + '    |    ' + str(round((total / 1000000), 2)) + ' M')
                     await message.channel.send(embed=em)
 
@@ -168,7 +169,7 @@ class StatCommand(BaseCommand):
 
                 em.set_author(
                     name=stat_id + ' - Total',
-                    icon_url='https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
+                    icon_url='https://redirect.dugged.net:8443/logo_full.png')
 
                 await message.channel.send(embed=em)
             else:

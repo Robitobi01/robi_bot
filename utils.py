@@ -70,3 +70,22 @@ def generate_embed_table(columns, values, line=False):
             inline=line,
             value=values[columns.index(column)])
     return em
+
+
+def shorten_embed_lists(lists, chars_added=0):
+    min_lengths = []
+    for l in lists:
+        i = 0
+        min_length = 0
+        for count, value in enumerate(l):
+            i += len(value)
+            i += chars_added
+            if i <= 1005 and count > min_length:
+                min_length = count
+        min_lengths.append(min_length)
+    shortened_lists = []
+    for l in lists:
+        new_list = list(l[:min(min_lengths)])
+        new_list.append('...' + str(len(lists[0]) - min(min_lengths)) + ' more entries')
+        shortened_lists.append(new_list)
+    return shortened_lists

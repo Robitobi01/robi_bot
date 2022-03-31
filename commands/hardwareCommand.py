@@ -18,11 +18,13 @@ class HardwareCommand(BaseCommand):
         cpu_percentage = str(psutil.cpu_percent(interval=0.5))
         ram_usage = str(round(psutil.virtual_memory()[3] / 1073741824, 2))
         total, used, free = shutil.disk_usage("/")
+        rd_total, rd_used, rd_free = shutil.disk_usage("/mnt/ramdisk")
         avaliable = math.ceil(used / ((used + free) / 100))
 
         if self.client:
             await message.channel.send('The current CPU usage is: **' + cpu_percentage +
                                        '%**\nThe current RAM usage is: **' + ram_usage +
+                                       'GB**\nThe current RAMDISK usage is: **' + str(rd_used // (2**30)) + 'GB/' + str(rd_used // (2**30) + rd_free // (2**30)) + 'GB**' +
                                        'GB**\nThe current HDD usage is: **' + str(used // (2**30)) + 'GB/' + str(used // (2**30) + free // (2**30)) + 'GB**')
         else:
             print('The current CPU usage is: **' + cpu_percentage + '%**\nThe current RAM usage is: **' +

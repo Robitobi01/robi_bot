@@ -162,7 +162,7 @@ class BenchmarkCommand(BaseCommand):
                         ['\n'.join(text1), '\n'.join(text2), '\n'.join(text3)],
                         True)
                     em.set_author(name='Benchmark',
-                                  icon_url='https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
+                                  icon_url='https://redirect.dugged.net:8443/logo_full.png')
                     em.set_footer(
                         text='Total Time: ' + str(datetime.timedelta(seconds=round(benchmark.elapsed_time(), 0))))
 
@@ -205,7 +205,7 @@ class BenchmarkCommand(BaseCommand):
                         ['\n'.join(text1), '\n'.join(text2)],
                         True)
                     em.set_author(name='Benchmark List',
-                                  icon_url='https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
+                                  icon_url='https://redirect.dugged.net:8443/logo_full.png')
                     em.set_footer(text='Active: ' + str(len(self.benchmarks.keys())))
                     await message.channel.send(embed=em)
                 else:

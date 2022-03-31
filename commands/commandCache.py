@@ -37,6 +37,7 @@ class CommandCache(object):
         # caching usernames to uuid
         files = glob.glob(os.path.join(self.stat_folder, '*.json'))
 
+
         for item in files:
             filename = item[-41:]
             temp_uuids.append(convert_uuid(filename.split('.json', 1)[0]))
@@ -48,7 +49,7 @@ class CommandCache(object):
                     url = 'https://sessionserver.mojang.com/session/minecraft/profile/' + item
 
                     response = requests.get(url)
-                    response.raise_for_status
+                    response.raise_for_status()
 
                     response = json.loads(response.text)
                     value = response['properties'][0]['value']
@@ -58,8 +59,8 @@ class CommandCache(object):
 
                     temp_names.append(profile_name)
                     temp_lower_names.append(profile_name.casefold())
-                except:
-                    pass
+                except Exception as e:
+                    print('Error while fetching ' + item + ': ' + str(e))
         else:
             temp_names.append('TIGuardian')
             temp_names.append('TheBikerExtreme')

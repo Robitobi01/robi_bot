@@ -132,14 +132,15 @@ class PlaytimeCommand(BaseCommand):
                         (format_name_for_embed(p.player_name),
                          format_playtime_for_embed(p.years, p.days, p.hours, p.minutes))
                         for p in players))
-
+                    shortened_lists = shorten_embed_lists([player_names, playtimes], 2)
+                    player_names, playtimes = shortened_lists[0], shortened_lists[1]
                     em = generate_embed_table(
                         ['Player', 'Playtime'],
                         ['\n'.join(player_names), '\n'.join(playtimes)],
                         True)
                     em.set_author(
                         name='Total Playtime',
-                        icon_url='https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
+                        icon_url='https://redirect.dugged.net:8443/logo_full.png')
 
                     if len(players) > 1:
                         em.set_footer(text='Total: {0}'.format(
@@ -158,9 +159,9 @@ class PlaytimeCommand(BaseCommand):
                         print('Total: {0}'.format(
                             format_playtime_for_total(total_info.years, total_info.days, total_info.hours,
                                                       total_info.minutes)))
-        except:
+        except Exception as e:
             if self.client:
-                await message.channel.send('No playerfile or stat found')
+                await message.channel.send('No playerfile or stat found ' + str(e))
             else:
                 print('No playerfile or stat found')
 
@@ -256,7 +257,7 @@ class PlaytimeCommand(BaseCommand):
                     True)
                 em.set_author(
                     name='Server Times',
-                    icon_url='https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
+                    icon_url='https://redirect.dugged.net:8443/logo_full.png')
                 em.set_footer(text='World Time is used for daylight cycle.')
 
                 await message.channel.send(embed=em)

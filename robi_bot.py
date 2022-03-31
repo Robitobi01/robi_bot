@@ -7,7 +7,7 @@ from commands import *
 client = discord.Client()
 
 # Directories
-FOLDER = os.path.dirname(__file__)
+FOLDER = os.path.dirname('/home/robi/Desktop/code/robi_bot/servers/')
 
 CREATIVE_FOLDER = os.path.join(FOLDER, 'Creative', 'Creative')
 SURVIVAL_FOLDER = os.path.join(FOLDER, 'Survival', 'Survival')
@@ -48,7 +48,6 @@ commands[playtimeCommand.PlaytimeCommand.command_text] = playtimeCommand.Playtim
 commands[reloadCommand.ReloadCommand.command_text] = reloadCommand.ReloadCommand(client, command_cache, commands, STAT_FOLDER)
 commands[scoreboardCommand.ScoreboardCommand.command_text] = scoreboardCommand.ScoreboardCommand(client, command_cache, DATA_FOLDER)
 commands[statCommand.StatCommand.command_text] = statCommand.StatCommand(client, command_cache, STAT_FOLDER)
-commands[statusCommand.StatusCommand.command_text] = statusCommand.StatusCommand(client, command_cache)
 commands[structureCommand.StructureCommand.command_text] = structureCommand.StructureCommand(client, command_cache, STRUCTURE_FOLDER)
 commands[synchronizeCommand.SynchronizeCommand.command_text] = synchronizeCommand.SynchronizeCommand(client, command_cache, DATA_FOLDER, STAT_FOLDER)
 commands[tpsCommand.TpsCommand.command_text] = tpsCommand.TpsCommand(client, command_cache, SURVIVAL_FOLDER)

@@ -50,7 +50,7 @@ class ReloadCommand(BaseCommand):
                     colour=0x003763)
 
                 em.set_author(name='File Reload',
-                              icon_url='https://cdn.discordapp.com/icons/336592624624336896/31615259cca237257e3204767959a967.png')
+                              icon_url='https://redirect.dugged.net:8443/logo_full.png')
                 em.set_footer(text='Time: ' + str(round(time.time() - start_time, 2)) + 's')
 
                 await message.channel.send(embed=em)
