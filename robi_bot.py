@@ -7,7 +7,7 @@ from commands import *
 client = discord.Client()
 
 # Directories
-FOLDER = os.path.dirname('/home/robi/Desktop/code/robi_bot/servers/')
+FOLDER = os.path.dirname('/var/games/minecraft/servers/')
 
 CREATIVE_FOLDER = os.path.join(FOLDER, 'Creative', 'Creative')
 SURVIVAL_FOLDER = os.path.join(FOLDER, 'Survival', 'Survival')
