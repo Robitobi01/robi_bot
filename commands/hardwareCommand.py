@@ -24,7 +24,7 @@ class HardwareCommand(BaseCommand):
         if self.client:
             await message.channel.send('The current CPU usage is: **' + cpu_percentage +
                                        '%**\nThe current RAM usage is: **' + ram_usage +
-                                       'GB**\nThe current RAMDISK usage is: **' + str(rd_used // (2**30)) + 'GB/' + str(rd_used // (2**30) + rd_free // (2**30)) + 'GB**' +
+                                       'GB**\nThe current RAMDISK usage is: **' + str(rd_used // (2**30)) + 'GB/' + str(rd_used // (2**30) + rd_free // (2**30)) +
                                        'GB**\nThe current HDD usage is: **' + str(used // (2**30)) + 'GB/' + str(used // (2**30) + free // (2**30)) + 'GB**')
         else:
             print('The current CPU usage is: **' + cpu_percentage + '%**\nThe current RAM usage is: **' +
