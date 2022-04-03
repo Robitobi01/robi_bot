@@ -86,6 +86,7 @@ def shorten_embed_lists(lists, chars_added=0):
     shortened_lists = []
     for l in lists:
         new_list = list(l[:min(min_lengths)])
-        new_list.append('...' + str(len(lists[0]) - min(min_lengths)) + ' more entries')
+        remaining_entries_count = len(lists[0]) - min(min_lengths)
+        new_list.append('...' + str(remaining_entries_count) + ' more entries' if remaining_entries_count != 1 else ' more entry')
         shortened_lists.append(new_list)
     return shortened_lists
