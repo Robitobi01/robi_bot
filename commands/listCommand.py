@@ -82,8 +82,11 @@ class ListCommand(BaseCommand):
 
                 async with CommandCache.semaphore:
                     for item in online_list:
-                        nbt_file = nbt.NBTFile(os.path.join(self.playerdata_folder, convert_uuid(
-                            self.cache.uuids[self.cache.names.index(item)]) + '.dat'))
+                        uuid = ''
+                        for i, name in enumerate(self.cache.names):
+                            if item.lower() == name.lower():
+                                uuid = self.cache.uuids[i]
+                        nbt_file = nbt.NBTFile(os.path.join(self.playerdata_folder, convert_uuid(uuid) + '.dat'))
                         # nbt_file = nbt.NBTFile(os.path.join(self.playerdata_folder, '33804744-b7a3-4816-8ddc-02ac2d8c80cf.dat'))
 
                         dimension = nbt_file['Dimension'].value
@@ -105,6 +108,6 @@ class ListCommand(BaseCommand):
                     print('No Player is currently online')
         except Exception as e:
             if self.client:
-                await message.channel.send('An error occured while trying to reach the server: ' + e)
+                await message.channel.send('An error occured while trying to reach the server: ' + str(e))
             else:
-                print('An error occured while trying to reach the server:' + e)
+                print('An error occured while trying to reach the server:' + str(e))

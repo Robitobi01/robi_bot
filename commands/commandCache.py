@@ -47,8 +47,10 @@ class CommandCache(object):
                 try:
                     # http://wiki.vg/Mojang_API
                     url = 'https://sessionserver.mojang.com/session/minecraft/profile/' + item
+                    requests.packages.urllib3.disable_warnings(
+                        requests.packages.urllib3.exceptions.InsecureRequestWarning)
 
-                    response = requests.get(url)
+                    response = requests.get(url, verify=False)
                     response.raise_for_status()
 
                     response = json.loads(response.text)
